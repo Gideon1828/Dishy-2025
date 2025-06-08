@@ -1,0 +1,435 @@
+/* Container */
+.ingredient-container {
+  width: 60%;
+  margin: auto;
+  padding: 40px;
+  text-align: center;
+  background: #fff9f2;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.ingredient-container,
+h2 {
+  font-family: 'Pacifico', cursive;
+  color: #8d6e63;
+  margin-top: 40px;
+  font-family: sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Title */
+.ingredient-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #5c3d2e;
+}
+
+/* Form Wrapper */
+.ingredient-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Input Group */
+.ingredient-input-group {
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+/* Input Fields */
+.ingredient-input {
+  font-family: 'Open Sans', sans-serif;
+  width: 75%;
+  padding: 10px;
+  border: 3px solid #a67c52;
+  border-radius: 8px;
+  font-size: 18px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.ingredient-input:focus {
+  border-color: #5c3d2e;
+}
+
+/* Ingredient Buttons */
+.ingredient-btn {
+  font-family: 'Montserrat', sans-serif;
+  padding: 14px 18px;
+  font-size: 22px;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.ingredient-btn.add {
+  background: #5c3d2e;
+  color: white;
+}
+
+.ingredient-btn.remove {
+  background: #ff5c5c;
+  color: white;
+}
+
+.ingredient-btn:hover {
+  transform: scale(1.15);
+}
+
+/* Cuisine Selector */
+.select-cuisine {
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 25px;
+  background: #5c3d2e;
+  color: white;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  margin-right: 20px;
+}
+
+/* Submit Button */
+.submit-btn {
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 25px;
+  background: #5c3d2e;
+  color: white;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.submit-btn:hover {
+  background: #a67c52;
+  transform: scale(1.05);
+}
+
+.reset-btn {
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 25px;
+  background: #5c3d2e;
+  color: white;
+  padding: 16px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.reset-btn:hover {
+  background: #a67c52;
+  transform: scale(1.05);
+}
+
+/* Voice Button Styles */
+.voiced-btns {
+  background-color: #614130;
+  position: absolute;
+  right: 127px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  padding: 5px 8px;
+  transition: all 0.3s ease-in-out;
+  outline: none;
+}
+
+.voiced-btns:hover {
+  background-color: #a67c52;
+  transform: scale(1.1);
+}
+
+.voiced-btns.clicked {
+  background-color: #d65e0f !important;
+  transform: scale(0.9);
+  animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0.9) translateY(0);
+  }
+  50% {
+    transform: scale(1.0) translateY(-5px);
+  }
+  100% {
+    transform: scale(0.9) translateY(0);
+  }
+}
+
+/* Responsive Design */
+
+/* Large screens (1200px and up) */
+@media (min-width: 1200px) {
+  .ingredient-container {
+    width: 50%;
+    padding: 50px;
+  }
+
+  .ingredient-title {
+    font-size: 32px;
+  }
+
+  .ingredient-input {
+    font-size: 20px;
+    padding: 18px;
+  }
+
+  .voiced-btns {
+    right: 140px;
+    font-size: 24px;
+    padding: 6px 10px;
+  }
+}
+
+/* Medium screens (768px to 1199px) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .ingredient-container {
+    width: 70%;
+    padding: 35px;
+  }
+
+  .ingredient-title {
+    font-size: 26px;
+  }
+
+  .ingredient-input {
+    font-size: 17px;
+    padding: 15px;
+  }
+
+  .ingredient-btn {
+    padding: 12px 16px;
+    font-size: 20px;
+  }
+
+  .select-cuisine,
+  .submit-btn,
+  .reset-btn {
+    padding: 14px 24px;
+    font-size: 17px;
+  }
+
+  .voiced-btns {
+    right: 110px;
+    font-size: 20px;
+    padding: 4px 7px;
+  }
+}
+
+/* Small screens (480px to 767px) */
+@media (max-width: 767px) and (min-width: 480px) {
+  .ingredient-container {
+    width: 85%;
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .ingredient-container,
+  h2 {
+    font-size: 1.6rem;
+    margin-top: 20px;
+  }
+
+  .ingredient-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .ingredient-form {
+    gap: 14px;
+  }
+
+  .ingredient-input-group {
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .ingredient-input {
+    width: 55%;
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .voiced-btns {
+    right: 55px;
+    font-size: 18px;
+    padding: 4px 6px;
+  }
+
+  .ingredient-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .select-cuisine,
+  .submit-btn,
+  .reset-btn {
+    padding: 12px 20px;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-right: 10px;
+  }
+}
+
+/* Extra small screens (below 480px) */
+@media (max-width: 479px) {
+  .ingredient-container {
+    width: 95%;
+    padding: 20px;
+    margin: 10px auto;
+    border-radius: 12px;
+  }
+
+  .ingredient-container,
+  h2 {
+    font-size: 1.4rem;
+    margin-top: 15px;
+  }
+
+  .ingredient-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .ingredient-form {
+    gap: 12px;
+  }
+
+  .ingredient-input-group {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .ingredient-input {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .ingredient-btn {
+    padding: 8px 12px;
+    font-size: 16px;
+    align-self: center;
+  }
+
+  .select-cuisine,
+  .submit-btn,
+  .reset-btn {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 14px;
+    margin-top: 15px;
+    margin-right: 0;
+  }
+
+  .voiced-btns {
+    position: static;
+    margin-top: 10px;
+    font-size: 16px;
+    padding: 8px 10px;
+  }
+}
+
+/* Very small screens (below 360px) */
+@media (max-width: 359px) {
+  .ingredient-container {
+    width: 98%;
+    padding: 15px;
+    margin: 5px auto;
+  }
+
+  .ingredient-title {
+    font-size: 18px;
+  }
+
+  .ingredient-input {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .ingredient-btn {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .select-cuisine,
+  .submit-btn,
+  .reset-btn {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .voiced-btns {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+  .ingredient-container {
+    margin-top: 10px;
+    padding: 20px;
+  }
+
+  .ingredient-container,
+  h2 {
+    margin-top: 10px;
+  }
+
+  .ingredient-title {
+    margin-bottom: 15px;
+  }
+
+  .select-cuisine,
+  .submit-btn,
+  .reset-btn {
+    margin-top: 15px;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .ingredient-btn:hover,
+  .submit-btn:hover,
+  .reset-btn:hover,
+  .voiced-btns:hover {
+    transform: none;
+  }
+
+  .ingredient-btn:active,
+  .submit-btn:active,
+  .reset-btn:active {
+    transform: scale(0.95);
+  }
+
+  .voiced-btns:active {
+    transform: scale(0.9);
+  }
+}

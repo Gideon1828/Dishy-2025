@@ -1,0 +1,90 @@
+
+
+.footer {
+  width: 100%;
+  background-color: rgb(59, 47, 36);
+  color: #e0d5c8;
+  padding: 10px 0;
+  text-align: center;
+  margin-top: 0px; /* Ensures footer stays at the bottom */
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.footer-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  width: 50px;
+  height: auto;
+  margin-bottom: 3px;
+}
+
+.footer-title {
+  font-size: 22px;
+  color: #e0d5c8;
+  margin-top: 5px;
+  font-family: 'Pacifico', cursive;
+}
+
+.footer-tagline {
+  font-family: 'Pacifico', cursive;
+  font-size: 15px;
+  color: #e0d5c8;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+.footer-center,
+.footer-right {
+  text-align: left;
+}
+
+.footer-center h3,
+.footer-right h3 {
+  font-family: 'Pacifico', cursive;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.footer-center ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-center ul li a {
+  font-family: 'Montserrat', sans-serif;
+  color: #e0d5c8;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.footer-center ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer-right p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  color: #e0d5c8;
+  margin: 3px 0;
+}
+
+.footer-copyright {
+  font-family: 'Pacifico', cursive;
+  margin-top: 10px;
+  font-size: 14px;
+}

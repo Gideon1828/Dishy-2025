@@ -1,0 +1,473 @@
+.header {
+  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgb(59, 47, 36);
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.header-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.title {
+  font-family: 'Pacifico', cursive;
+  color: #e0d5c8;
+  font-size: 20px;
+}
+
+.header-search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0px;
+  gap: 10px;
+  flex-wrap: nowrap;
+  transition: all 0.3s ease;
+}
+
+.header-search-bar input {
+  font-family: 'Pacifico', cursive;
+  padding: 10px 100px 10px 10px;
+  font-size: 16px;
+  border: 2px solid #a67c52;
+  border-radius: 6px;
+  width: 240px;
+  transition: all 0.3s ease;
+}
+
+
+
+.header-search-bar select,
+.header-submit-btn {
+  font-family: 'Pacifico', cursive;
+  padding: 10px 14px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #5c3d2e;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.header-search-bar select:hover,
+.header-submit-btn:hover {
+  background-color: #a67c52;
+  transform: scale(1.05);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  font-family: "Cursive", sans-serif;
+  color: #e0d5c8;
+  font-family: 'Pacifico', cursive;
+  text-decoration: none;
+  font-size: 18px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #e0d5c8;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover:after {
+  width: 100%;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+}
+
+.language-switcher {
+  font-family: 'Pacifico', cursive;
+  color: #e0d5c8;
+  background-color: transparent;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.language-switcher:hover {
+  transform: scale(1.1);
+}
+
+/* Remove default arrow for IE */
+.language-switcher::-ms-expand {
+  display: none;
+}
+
+/* Profile Section */
+.profile-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  
+  transition: transform 0.3s ease;
+}
+
+.profile-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 200px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  transform-origin: top right;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  font-family: 'Pacifico', cursive;
+  margin-bottom: 10px;
+}
+
+.profile-dropdown-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+/* Dropdown Items */
+.dropdown-item {
+  display: block;
+  padding: 10px 15px;
+  color: #333;
+  font-family: 'Pacifico', cursive;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 4px;
+}
+
+.dropdown-item:hover {
+  background-color: #5c3d2e;
+  color: #fff;
+  text-decoration: none;
+  transform: translateX(5px);
+}
+
+/* Logout Button */
+.btn {
+  font-family: 'Pacifico', cursive;
+  display: block;
+  padding: 10px 25px;
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background-color: #5c3d2e;
+  color: #fff;
+  text-decoration: none;
+  transform: translateX(5px);
+}
+
+.dropdown-icon {
+  margin-right: 8px;
+  font-family: 'Pacifico', cursive; /* Adjust spacing between icon and text */
+  color: #5c3d2e; /* Adjust icon color as desired */
+  transition: color 0.2s ease;
+}
+
+.dropdown-icon:hover {
+  margin-right: 8px; /* Adjust spacing between icon and text */
+  color: #fff; /* Adjust icon color as desired */
+}
+
+/* Mobile Menu Toggle Button - Hidden by default */
+.mobile-menu-toggle,
+.mobile-search-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #e0d5c8;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s ease;
+  z-index: 20;
+}
+
+.mobile-menu-toggle:hover,
+.mobile-search-toggle:hover {
+  transform: scale(1.1);
+  color: #a67c52;
+}
+
+.mobile-menu-toggle.active,
+.mobile-search-toggle.active {
+  color: #d65e0f;
+}
+
+.mobile-controls {
+  display: none;
+}
+
+.mobile-menu-header {
+  display: none;
+}
+
+.mobile-menu-close {
+  display: none;
+}
+@media (max-width: 1130px) {
+  .header-search-bar input {
+    width: 180px;
+  }
+
+  .header-search-bar select,
+  .header-submit-btn {
+    padding: 8px 10px;
+  }
+
+  .nav {
+  gap: 10px;
+}
+.nav-link { 
+  font-size: 13px;
+}
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header-container {
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .mobile-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .mobile-menu-toggle,
+  .mobile-search-toggle {
+    display: block;
+  }
+
+  /* Hide desktop search bar on mobile */
+  .header-search-bar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: rgb(59, 47, 36);
+    padding: 15px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    z-index: 30;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    margin-top: 0;
+  }
+
+  .header-search-bar.expanded {
+    max-height: 200px;
+    opacity: 1;
+    pointer-events: all;
+    padding: 15px;
+  }
+
+  .header-search-bar input {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .header-search-bar select,
+  .header-submit-btn {
+    width: 100%;
+  }
+
+  /* Mobile Navigation Menu */
+  .nav-container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background-color: rgb(59, 47, 36);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 60px 20px 20px;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 15;
+    transition: right 0.3s ease;
+  }
+
+  .nav-container.mobile-open {
+    right: 0;
+  }
+
+  .mobile-menu-header {
+    display: block;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+
+  .mobile-menu-close {
+    display: block;
+    background: none;
+    border: none;
+    color: #e0d5c8;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-close:hover {
+    transform: scale(1.1);
+    color: #d65e0f;
+  }
+
+  .nav {
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 12px 0;
+    font-size: 20px;
+    border-bottom: 1px solid rgba(224, 213, 200, 0.2);
+    width: 100%;
+  }
+
+  .language-container {
+    margin: 15px 0;
+    width: 100%;
+  }
+
+  .profile-section {
+    margin: 10px 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .profile-dropdown {
+    position: relative;
+    top: 10px;
+    left: 0;
+    right: auto;
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 16px;
+  }
+
+  .logo {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Animation for search bar */
+@keyframes expandSearch {
+  from {
+    max-height: 0;
+    opacity: 0;
+  }
+  to {
+    max-height: 200px;
+    opacity: 1;
+  }
+}
+
+.header-search-bar.expanded {
+  animation: expandSearch 0.3s forwards;
+}
