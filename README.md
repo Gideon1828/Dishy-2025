@@ -31,8 +31,8 @@ Installation
 bash
 Copy
 Edit
-git clone https://github.com/yourusername/cookwizard.git
-cd cookwizard
+git clone https://github.com/gideon1828/Dishy2025.git
+cd dishy2025
 npm install
 Running Locally
 bash
