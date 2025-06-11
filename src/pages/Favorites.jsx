@@ -16,7 +16,7 @@ const Favorites = () => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const res = await fetch("http://localhost:5000/favorite", {
+        const res = await fetch("https://dishy-2g4s.onrender.com/favorite", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
