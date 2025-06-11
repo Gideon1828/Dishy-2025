@@ -55,7 +55,7 @@ const sortedFavorites = [...favorites].sort((a, b) => {
     const isCurrentlyFavorite = favoriteIds.includes(String(recipe.id));
 
     try {
-      const res = await fetch("http://localhost:5000/favorite", {
+      const res = await fetch("https://dishy-2g4s.onrender.com/favorite", {
         method: isCurrentlyFavorite ? "DELETE" : "POST",
         headers: {
           "Content-Type": "application/json",

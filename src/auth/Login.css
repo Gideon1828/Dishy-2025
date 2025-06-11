@@ -7,7 +7,7 @@
   /* Left side - Image section */
   .login-image {
     flex: 1;
-    background: url('auth/img_login.png') center/cover no-repeat;
+    background: url('/auth/img_login.png') center/cover no-repeat;
     position: relative;
     min-height: 70vh;
     margin-top: 0px;
