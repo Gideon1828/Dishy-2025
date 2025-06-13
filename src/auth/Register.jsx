@@ -16,6 +16,10 @@ export default function RegisterPage() {
     password: "",
   });
 
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [emailVerified, setEmailVerified] = useState(false);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,12 +30,50 @@ export default function RegisterPage() {
     }));
   };
 
+  const handleSendOtp = async (e) => {
+    e.preventDefault();
+    if (!formData.email) {
+      alert("Please enter your email first.");
+      return;
+    }
+    try {
+      const response = await axios.post("https://dishy-2g4s.onrender.com/send-otp", {
+        email: formData.email,
+      });
+      alert(response.data.message);
+      setOtpSent(true);
+    } catch (error) {
+      alert(error.response?.data?.error || "Failed to send OTP");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    if (!otp) {
+      alert("Please enter the OTP.");
+      return;
+    }
+    try {
+      const response = await axios.post("https://dishy-2g4s.onrender.com/verify-otp", {
+        email: formData.email,
+        otp,
+      });
+      alert(response.data.message);
+      setEmailVerified(true);
+    } catch (error) {
+      alert(error.response?.data?.error || "OTP verification failed");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!emailVerified) {
+      alert("Please verify your email using the OTP first.");
+      return;
+    }
     try {
       const response = await axios.post("https://dishy-2g4s.onrender.com/register", formData);
       alert(response.data.message);
-      navigate("/login"); // Navigate after successful registration
+      navigate("/login");
     } catch (error) {
       alert(error.response?.data?.error || t("register.registrationFailed"));
     }
@@ -41,12 +83,10 @@ export default function RegisterPage() {
     <div>
       <Header />
       <div className="register-container">
-        {/* Left side - Image section */}
         <div className="register-image">
           <div className="overlay"></div>
         </div>
 
-        {/* Right side - Registration form */}
         <div className="register-form-container">
           <div className="register-box">
             <h1 className="register-title">{t("register.title")}</h1>
@@ -60,20 +100,17 @@ export default function RegisterPage() {
                     id="firstname"
                     name="firstname"
                     type="text"
-                    placeholder={t("register.firstNamePlaceholder")}
                     value={formData.firstname}
                     onChange={handleChange}
                     required
                   />
                 </div>
-
                 <div className="input-group">
                   <label htmlFor="lastname">{t("register.lastName")}</label>
                   <input
                     id="lastname"
                     name="lastname"
                     type="text"
-                    placeholder={t("register.lastNamePlaceholder")}
                     value={formData.lastname}
                     onChange={handleChange}
                     required
@@ -87,7 +124,6 @@ export default function RegisterPage() {
                   id="username"
                   name="username"
                   type="text"
-                  placeholder={t("register.usernamePlaceholder")}
                   value={formData.username}
                   onChange={handleChange}
                   required
@@ -100,11 +136,30 @@ export default function RegisterPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder={t("register.emailPlaceholder")}
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={otpSent}
                 />
+                {!otpSent ? (
+                  <button type="button" onClick={handleSendOtp} className="otp-button">
+                    Send OTP
+                  </button>
+                ) : (
+                  <>
+                    <input
+                      type="text"
+                      placeholder="Enter OTP"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      required
+                      className="otp-input"
+                    />
+                    <button type="button" onClick={handleVerifyOtp} className="otp-button">
+                      Verify OTP
+                    </button>
+                  </>
+                )}
               </div>
 
               <div className="input-group">
@@ -113,7 +168,6 @@ export default function RegisterPage() {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder={t("register.passwordPlaceholder")}
                   value={formData.password}
                   onChange={handleChange}
                   required

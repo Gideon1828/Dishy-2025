@@ -7,6 +7,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+
+
 
 // App Config
 dotenv.config();
@@ -39,6 +42,22 @@ const userSchema = new mongoose.Schema({
     }
   ]
 });
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+// OTP Schema
+const otpSchema = new mongoose.Schema({
+  email: String,
+  otp: String,
+  createdAt: { type: Date, default: Date.now, index: { expires: 300 } } // expires in 5 minutes
+});
+
+const OTP = mongoose.model("OTP", otpSchema);
 
 
 const User = mongoose.model("User", userSchema);
@@ -174,6 +193,61 @@ app.delete("/favorite", async (req, res) => {
   }
 });
 
+app.post("/send-otp", async (req, res) => {
+  const { email } = req.body;
+  const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+  try {
+    await OTP.deleteMany({ email }); // Remove existing OTPs
+    await OTP.create({ email, otp: otpCode });
+
+    await transporter.sendMail({
+      from: `"Dishy" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your Dishy OTP Code",
+      text: `Your OTP is ${otpCode}. It is valid for 5 minutes.`,
+    });
+
+    res.json({ message: "OTP sent to email" });
+  } catch (error) {
+    console.error("OTP Send Error:", error);
+    res.status(500).json({ error: "Failed to send OTP" });
+  }
+});
+
+app.post("/verify-otp", async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const record = await OTP.findOne({ email, otp });
+    if (!record) return res.status(400).json({ error: "Invalid or expired OTP" });
+
+    await OTP.deleteMany({ email }); // Optional cleanup
+
+    res.json({ message: "OTP verified successfully" });
+  } catch (error) {
+    console.error("OTP Verify Error:", error);
+    res.status(500).json({ error: "OTP verification failed" });
+  }
+});
+
+app.post("/reset-password", async (req, res) => {
+  const { email, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 6);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Reset Password Error:", error);
+    res.status(500).json({ error: "Failed to reset password" });
+  }
+});
 
 // Start Server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
