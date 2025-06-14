@@ -1,3 +1,4 @@
+// VisitDish.jsx
 import React, { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart, FaLink } from "react-icons/fa";
 import "./VisitDish.css";
@@ -6,6 +7,7 @@ import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import IngredientList from "../components/IngredientList.jsx"; // ✅ NEW import
 
 const VisitDish = () => {
   const { id } = useParams();
@@ -13,14 +15,13 @@ const VisitDish = () => {
   const navigate = useNavigate();
   const allRecipes = location.state?.recipes || [];
   const [dish, setDish] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false); // Changed from true to false
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [showIngredientModal, setShowIngredientModal] = useState(false); // ✅ NEW state
 
   useEffect(() => {
-    // Check favorites
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     setIsFavorite(favorites.some(fav => fav.id === parseInt(id)));
 
-    // Fetch recipe details
     const fetchDishDetails = async () => {
       try {
         const response = await fetch(
@@ -41,17 +42,17 @@ const VisitDish = () => {
 
   const handleFavorite = () => {
     if (!dish) return;
-    
+
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     const newFavorites = isFavorite
       ? favorites.filter(fav => fav.id !== parseInt(id))
-      : [...favorites, { 
-          id: parseInt(id), 
-          title: dish.title, 
+      : [...favorites, {
+          id: parseInt(id),
+          title: dish.title,
           image: dish.image,
           readyInMinutes: dish.readyInMinutes
         }];
-    
+
     localStorage.setItem('favorites', JSON.stringify(newFavorites));
     setIsFavorite(!isFavorite);
     toast.success(isFavorite ? "Removed from favorites" : "Added to favorites!");
@@ -71,32 +72,25 @@ const VisitDish = () => {
 
   if (!dish) return <div className="loading">Loading...</div>;
 
-  // Get suggested recipes (excluding the current dish)
   const suggestedRecipes = allRecipes
     .filter((recipe) => recipe.id !== parseInt(id))
-    .slice(0, 6); // Show 6 suggestions
+    .slice(0, 6);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column"}}>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <ToastContainer position="bottom-right" autoClose={3000} />
       <div className="dish-container">
         <Header />
 
-        {/* Dish Header with Actions */}
         <div className="dish-header">
           <h1 className="dish-title-large">{dish.title}</h1>
           <div className="action-buttons">
-            {/* Added Favorite Button */}
             <button
               onClick={handleFavorite}
               className={`favorite-btn ${isFavorite ? 'active' : ''}`}
               aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
             >
-              {isFavorite ? (
-                <FaHeart className="icon" />
-              ) : (
-                <FaRegHeart className="icon" />
-              )}
+              {isFavorite ? <FaHeart className="icon" /> : <FaRegHeart className="icon" />}
             </button>
             <button
               onClick={handleShare}
@@ -107,27 +101,36 @@ const VisitDish = () => {
             </button>
           </div>
         </div>
+
         <div className="dish-image-container">
           <img src={dish.image} alt={dish.title} className="dish-image" />
         </div>
 
-        {/* Ingredients Section */}
+        {/* INGREDIENTS SECTION */}
         <div className="section">
           <h2 className="section-title">Ingredients</h2>
           <div className="ingredients-grid">
-            {dish.extendedIngredients.map((ingredient) => (
-              <div key={ingredient.id} className="ingredient-card">
-                <img
-                  src={`https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`}
-                  alt={ingredient.name}
-                />
-                <p className="ingName">{ingredient.original}</p>
-              </div>
-            ))}
+            {dish.extendedIngredients.map((ingredient, index) => (
+  <div key={ingredient.id || `${ingredient.name}-${index}`} className="ingredient-card">
+    <img
+      src={`https://spoonacular.com/cdn/ingredients_100x100/${ingredient.image}`}
+      alt={ingredient.name}
+    />
+    <p className="ingName">{ingredient.original}</p>
+  </div>
+))}
           </div>
+
+          {/* ✅ New Button */}
+          <button
+            className="generate-list-btn"
+            onClick={() => setShowIngredientModal(true)}
+          >
+            Generate Ingredients Price List
+          </button>
         </div>
 
-        {/* Equipment Section */}
+        {/* EQUIPMENT */}
         <div className="section">
           <h2 className="section-title">Equipment</h2>
           <div className="equipment-list">
@@ -139,7 +142,7 @@ const VisitDish = () => {
           </div>
         </div>
 
-        {/* Instructions Section */}
+        {/* INSTRUCTIONS */}
         <div className="section">
           <h2 className="section-title">Instructions</h2>
           <ol className="instructions-list">
@@ -149,7 +152,7 @@ const VisitDish = () => {
           </ol>
         </div>
 
-        {/* Nutritional Information */}
+        {/* NUTRITION */}
         <div className="section">
           <h2 className="section-title">Nutritional Information</h2>
           <div className="nutrition-grid">
@@ -163,7 +166,7 @@ const VisitDish = () => {
           </div>
         </div>
 
-        {/* 🔥 Suggested Dishes Section (New Feature) */}
+        {/* SUGGESTED */}
         <div className="section">
           <h2 className="section-title">Suggested Dishes</h2>
           <div className="suggestions-grids">
@@ -172,7 +175,11 @@ const VisitDish = () => {
                 <img src={recipe.image} alt={recipe.title} />
                 <h3>{recipe.title}</h3>
                 <button
-                  onClick={() => navigate(`/visit-dish/${recipe.id}`, { state: { recipes: allRecipes } })}
+                  onClick={() =>
+                    navigate(`/visit-dish/${recipe.id}`, {
+                      state: { recipes: allRecipes },
+                    })
+                  }
                   className="view-recipes"
                 >
                   View Recipe
@@ -181,8 +188,16 @@ const VisitDish = () => {
             ))}
           </div>
         </div>
-
       </div>
+
+      {/* ✅ IngredientList Modal */}
+      {showIngredientModal && (
+        <IngredientList
+          ingredients={dish.extendedIngredients}
+          onClose={() => setShowIngredientModal(false)}
+        />
+      )}
+
       <Footer />
     </div>
   );

@@ -201,3 +201,20 @@ div.h2 {
   background: #a67c52;
   transform: scale(1.05);
 }
+
+.generate-list-btn{
+  font-family: 'Open Sans', sans-serif;
+  display: inline-block;
+  background: #5c3d2e;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-top: 10px;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+.generate-list-btn:hover {
+  background: #a67c52;
+  transform: scale(1.05);
+}
