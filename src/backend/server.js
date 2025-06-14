@@ -241,8 +241,8 @@ app.post("/reset-password", async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 6);
     user.password = hashedPassword;
     await user.save();
-
-    res.json({ message: "Password reset successfully" });
+    const token = jwt.sign({ id: user._id }, "secretKey", { expiresIn: "1h" });
+    res.json({ message: "Password reset successfully",token });
   } catch (error) {
     console.error("Reset Password Error:", error);
     res.status(500).json({ error: "Failed to reset password" });
