@@ -1,6 +1,4 @@
 // Imports
-/* eslint-disable no-undef */
-
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
@@ -9,24 +7,37 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 
-
-
 // App Config
 dotenv.config();
 const app = express();
-/* global process */
 const PORT = process.env.PORT || 5000;
+
+// Middleware to verify JWT token
+// In same file or extract later
+const verifyToken = async (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, "secretKey");
+    req.user = await User.findById(decoded.id);
+    if (!req.user) return res.status(404).json({ error: "User not found" });
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+};
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// MongoDB Connection (Updated)
+// MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-// User Schema
+// Schemas
 const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
@@ -43,6 +54,37 @@ const userSchema = new mongoose.Schema({
   ]
 });
 
+const otpSchema = new mongoose.Schema({
+  email: String,
+  otp: String,
+  createdAt: { type: Date, default: Date.now, index: { expires: 300 } }
+});
+
+const ratingSchema = new mongoose.Schema({
+  dishId: String,
+  userId: String,
+  username: String,
+  rating: Number,
+  comment: String,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const commentSchema = new mongoose.Schema({
+  dishId: String,
+  userId: String,
+  username: String,
+  comment: String,
+  timestamp: { type: Date, default: Date.now }
+});
+
+const Comment = mongoose.model("Comment", commentSchema);
+
+// Models
+const User = mongoose.model("User", userSchema);
+const OTP = mongoose.model("OTP", otpSchema);
+const Rating = mongoose.model("Rating", ratingSchema);
+
+// Nodemailer setup
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -50,98 +92,56 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-// OTP Schema
-const otpSchema = new mongoose.Schema({
-  email: String,
-  otp: String,
-  createdAt: { type: Date, default: Date.now, index: { expires: 300 } } // expires in 5 minutes
-});
 
-const OTP = mongoose.model("OTP", otpSchema);
+// Default Route
+app.get("/", (req, res) => res.send("Backend is running!"));
 
-
-const User = mongoose.model("User", userSchema);
-
-// Default Route (For Render)
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
-  
-});
-
-// Routes
-
-// Register Route
+// AUTH ROUTES
 app.post("/register", async (req, res) => {
   const { firstname, lastname, username, email, password } = req.body;
-  
   const hashedPassword = await bcrypt.hash(password, 6);
   const newUser = new User({ firstname, lastname, username, email, password: hashedPassword });
-  
   try {
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });
-  }
-  // eslint-disable-next-line no-unused-vars 
-  catch (error) {
+  } catch (error) {
     res.status(400).json({ error: "User already exists or invalid data" });
   }
 });
 
-// Login Route
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  
   const user = await User.findOne({ email }).lean();
   if (!user) return res.status(404).json({ error: "User not found" });
-  
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
-
   const token = jwt.sign({ id: user._id }, "secretKey", { expiresIn: "1h" });
   res.json({ message: "Login successful", token });
 });
 
-// Profile Route: Fetch the username from MongoDB
 app.get("/working", async (req, res) => {
-  // Get token from the Authorization header (format: "Bearer <token>")
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Unauthorized" });
-
   try {
-    // Verify token using your secret key
     const decoded = jwt.verify(token, "secretKey");
-    // Find the user by ID and return only the username field
     const user = await User.findById(decoded.id).select("username");
     if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user);
-  }
-  // eslint-disable-next-line no-unused-vars  
-  catch (error) {
+  } catch (error) {
     res.status(401).json({ error: "Invalid token" });
   }
 });
 
-// Add this below your /login and /favorite routes
+// FAVORITES
 app.get("/favorite", async (req, res) => {
-  console.log("GET /favorites called");
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) {
-    console.log("No token provided");
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
   try {
     const decoded = jwt.verify(token, "secretKey");
     const user = await User.findById(decoded.id);
-    if (!user) {
-      console.log("User not found");
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    console.log("Returning favorites:", user.favorites.length);
+    if (!user) return res.status(404).json({ error: "User not found" });
     res.json(user.favorites || []);
   } catch (error) {
-    console.log("Error verifying token or fetching favorites:", error);
     res.status(401).json({ error: "Invalid token" });
   }
 });
@@ -149,18 +149,14 @@ app.get("/favorite", async (req, res) => {
 app.post("/favorite", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Unauthorized" });
-
   try {
     const decoded = jwt.verify(token, "secretKey");
     const user = await User.findById(decoded.id);
     const { recipe } = req.body;
-
     if (!user) return res.status(404).json({ error: "User not found" });
 
     const alreadyFavorited = user.favorites.some((fav) => fav.id === recipe.id);
-    if (alreadyFavorited) {
-      return res.status(400).json({ error: "Already favorited" });
-    }
+    if (alreadyFavorited) return res.status(400).json({ error: "Already favorited" });
 
     user.favorites.push(recipe);
     await user.save();
@@ -173,32 +169,26 @@ app.post("/favorite", async (req, res) => {
 app.delete("/favorite", async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
   if (!token) return res.status(401).json({ error: "Unauthorized" });
-
   try {
     const decoded = jwt.verify(token, "secretKey");
     const user = await User.findById(decoded.id);
     const { recipe } = req.body;
-
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    user.favorites = user.favorites.filter(
-      (fav) => String(fav.id) !== String(recipe.id)
-    );
-
+    user.favorites = user.favorites.filter(fav => String(fav.id) !== String(recipe.id));
     await user.save();
     res.json({ message: "Recipe removed from favorites" });
   } catch (err) {
-    console.error(err);
     res.status(401).json({ error: "Invalid token" });
   }
 });
 
+// OTP + PASSWORD RESET
 app.post("/send-otp", async (req, res) => {
   const { email } = req.body;
   const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-
   try {
-    await OTP.deleteMany({ email }); // Remove existing OTPs
+    await OTP.deleteMany({ email });
     await OTP.create({ email, otp: otpCode });
 
     await transporter.sendMail({
@@ -210,30 +200,25 @@ app.post("/send-otp", async (req, res) => {
 
     res.json({ message: "OTP sent to email" });
   } catch (error) {
-    console.error("OTP Send Error:", error);
     res.status(500).json({ error: "Failed to send OTP" });
   }
 });
 
 app.post("/verify-otp", async (req, res) => {
   const { email, otp } = req.body;
-
   try {
     const record = await OTP.findOne({ email, otp });
     if (!record) return res.status(400).json({ error: "Invalid or expired OTP" });
 
-    await OTP.deleteMany({ email }); // Optional cleanup
-
+    await OTP.deleteMany({ email });
     res.json({ message: "OTP verified successfully" });
   } catch (error) {
-    console.error("OTP Verify Error:", error);
     res.status(500).json({ error: "OTP verification failed" });
   }
 });
 
 app.post("/reset-password", async (req, res) => {
   const { email, newPassword } = req.body;
-
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -242,12 +227,158 @@ app.post("/reset-password", async (req, res) => {
     user.password = hashedPassword;
     await user.save();
     const token = jwt.sign({ id: user._id }, "secretKey", { expiresIn: "1h" });
-    res.json({ message: "Password reset successfully",token });
+    res.json({ message: "Password reset successfully", token });
   } catch (error) {
-    console.error("Reset Password Error:", error);
     res.status(500).json({ error: "Failed to reset password" });
   }
 });
+
+// RATINGS AND COMMENTS
+// Ratings
+app.post("/rate-comment", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, "secretKey");
+    const user = await User.findById(decoded.id);
+    const { dishId, rating, comment } = req.body;
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const existingRating = await Rating.findOne({ dishId, userId: user._id });
+    if (existingRating) {
+      existingRating.rating = rating;
+      existingRating.comment = comment;
+      existingRating.createdAt = new Date();
+      await existingRating.save();
+    } else {
+      await Rating.create({
+        dishId,
+        userId: user._id,
+        username: user.username,
+        rating,
+        comment
+      });
+    }
+
+    res.json({ message: "Rating and comment submitted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to rate and comment" });
+  }
+});
+
+app.get("/rate-comment/:dishId", verifyToken, async (req, res) => {
+  const { dishId } = req.params;
+
+  try {
+    const allRatings = await Rating.find({ dishId });
+
+    const userRatingDoc = await Rating.findOne({ dishId, userId: req.user._id });
+
+    res.json({
+      allRatings,
+      userRating: userRatingDoc?.rating || null,
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch ratings" });
+  }
+});
+
+
+// Comments
+app.post("/api/comments", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, "secretKey");
+    const user = await User.findById(decoded.id);
+    const { dishId, comment } = req.body;
+
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const newComment = new Comment({
+      dishId,
+      userId: user._id,
+      username: user.username,
+      comment
+    });
+
+    await newComment.save();
+    res.json({ message: "Comment posted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to post comment" });
+  }
+});
+
+app.get("/comments/:dishId", async (req, res) => {
+  const { dishId } = req.params;
+  try {
+    const comments = await Rating.find({ dishId }).sort({ timestamp: -1 });
+    res.json(comments);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch comments" });
+  }
+});
+
+app.put("/api/comments/:id", async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, "secretKey");
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const comment = await Rating.findById(req.params.id);
+    if (!comment) return res.status(404).json({ error: "Comment not found" });
+
+    if (String(comment.userId) !== String(user._id)) {
+      return res.status(403).json({ error: "You are not allowed to edit this comment" });
+    }
+
+    comment.comment = req.body.comment || comment.comment;
+    comment.timestamp = new Date();
+    await comment.save();
+
+    res.json({ message: "Comment updated", updatedComment: comment });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update comment" });
+  }
+});
+
+app.delete("/api/comments/:id", async (req, res) => {
+  
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, "secretKey");
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const comment = await Rating.findById(req.params.id);
+    if (!comment) {
+      
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    if (String(comment.userId) !== String(user._id)) {
+      return res.status(403).json({ error: "You are not allowed to delete this comment" });
+    }
+
+    await Rating.findByIdAndDelete(req.params.id);
+    res.json({ message: "Comment deleted" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete comment" });
+  }
+});
+
+
+
+
+
 
 // Start Server
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

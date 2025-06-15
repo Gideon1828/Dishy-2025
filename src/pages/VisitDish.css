@@ -218,3 +218,176 @@ div.h2 {
   background: #a67c52;
   transform: scale(1.05);
 }
+
+/* Ratings and Comments Section */
+/* .feedback-section{
+  display: flex;
+  flex-direction: column;
+  
+} */
+.feedback-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 600px;
+}
+
+.feedback-form textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.feedback-form input[type="number"] {
+  width: 100px;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.feedback-form button {
+  background-color: #5c3d2e;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.feedback-form button:hover {
+  background-color: #a67c52;
+  transform: scale(1.03);
+}
+
+/* Comments List */
+.comments-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.comment-box {
+  background-color: #f9f9f9;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid #a67c52;
+  font-family: 'Open Sans', sans-serif;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.comment-box p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.comment-box span {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.star-rating {
+  font-size: 2rem;
+  color: #ccc;
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.star-rating .star.filled {
+  color: gold;
+  transition: color 0.2s ease-in-out;
+}
+
+.star-rating .star:hover {
+  color: #ffcc00;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 10px;
+}
+
+.pagination-controls button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+/* Author Info in Comment */
+.comment-box .comment-author {
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* Edit/Delete Buttons */
+.comment-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.comment-actions button {
+  background-color: transparent;
+  border: none;
+  color: #5c3d2e;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  transition: color 0.3s ease;
+  border-radius: 4px;
+}
+
+.comment-actions button:hover {
+  color: #a67c52;
+  background-color: rgba(92, 61, 46, 0.1);
+}
+
+/* Edit Textarea */
+.edit-comment-textarea {
+  width: 100%;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  padding: 8px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+/* Save/Cancel Buttons */
+.edit-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
+}
+
+.edit-actions button {
+  background-color: #5c3d2e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Open Sans', sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+.edit-actions button:hover {
+  background-color: #a67c52;
+}
