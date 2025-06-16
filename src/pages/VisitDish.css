@@ -391,3 +391,126 @@ div.h2 {
 .edit-actions button:hover {
   background-color: #a67c52;
 }
+
+/* === DARK MODE STYLES === */
+body.dark .dish-container {
+  background-color: #1e1c1a;
+  color: #f5f5f5;
+}
+
+body.dark .dish-title-large {
+  color: #f0e6dc;
+}
+
+body.dark .dish-image-container {
+  background-color: #2a2724;
+}
+
+body.dark .favorite-btn:hover,
+body.dark .share-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+body.dark .favorite-btn .icon {
+  color: #ccc;
+}
+
+body.dark .favorite-btn.active .icon {
+  color: #ff6b81;
+}
+
+body.dark .share-btn .icon {
+  color: #eee;
+}
+
+body.dark .instructions-list {
+  background: #2e2b28;
+  color: #f0e6dc;
+}
+
+body.dark .nutrition-card {
+  background-color: #2f2c29;
+  color: #e8e6e3;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .section-title {
+  color: #f0e6dc;
+}
+
+body.dark .recipe-cards {
+  background: #2e2b28;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .view-recipes,
+body.dark .generate-list-btn,
+body.dark .feedback-form button,
+body.dark .edit-actions button {
+  background-color: #8a6b56;
+  color: #fff;
+}
+
+body.dark .view-recipes:hover,
+body.dark .generate-list-btn:hover,
+body.dark .feedback-form button:hover,
+body.dark .edit-actions button:hover {
+  background-color: #a67c52;
+}
+
+body.dark .feedback-form textarea,
+body.dark .feedback-form input[type="number"],
+body.dark .edit-comment-textarea {
+  background-color: #2b2927;
+  color: #eee;
+  border: 1px solid #555;
+}
+
+body.dark .comments-list .comment-box {
+  background-color: #262422;
+  color: #e0d5c8;
+  border-left-color: #c1a181;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .comment-box span {
+  color: #aaa;
+}
+
+body.dark .comment-box .comment-author {
+  color: #f0e6dc;
+}
+
+body.dark .comment-actions button {
+  color: #f0e6dc;
+}
+
+body.dark .comment-actions button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #a67c52;
+}
+
+body.dark .star-rating {
+  color: #444;
+}
+
+body.dark .star-rating .star.filled {
+  color: gold;
+}
+
+body.dark .pagination-controls button {
+  background-color: #3c2e25;
+  color: #f0e6dc;
+  border: 1px solid #6d5c4d;
+}
+
+body.dark .pagination-controls button:hover {
+  background-color: #5c3d2e;
+  color: #fff;
+}
+
+body.dark .Toastify__toast {
+  background-color: #2e2b28;
+  color: #f5f5f5;
+}

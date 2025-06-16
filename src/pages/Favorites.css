@@ -186,3 +186,76 @@ h3 {
 .filter-container select:hover {
   border-color: #a67c52;
 }
+
+/* === DARK MODE STYLES === */
+body.dark .results-container {
+  background-color: #1e1c1a;
+  color: #f0e6dc;
+}
+
+body.dark .select-filter {
+  background: #a67c52;
+  color: #fff;
+}
+
+body.dark h2 {
+  color: #e0d5c8;
+}
+
+body.dark .recipe-card {
+  background-color: #2b2725;
+  color: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .recipe-card h3 {
+  color: #fff;
+}
+
+body.dark .favorite-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+body.dark .favorite-btn.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ff6b6b;
+}
+
+body.dark .share-btn,
+body.dark .view-recipe {
+  background-color: #8a6b56;
+  color: #fff;
+}
+
+body.dark .share-btn:hover,
+body.dark .view-recipe:hover {
+  background-color: #b08865;
+}
+
+body.dark .load-more-btn {
+  background: #8a6b56;
+  color: #fff;
+}
+
+body.dark .load-more-btn:hover {
+  background: #b08865;
+}
+
+body.dark .end-message {
+  color: #ccc;
+}
+
+body.dark .filter-container label {
+  color: #ddd;
+}
+
+body.dark .filter-container select {
+  background-color: #3a322f;
+  color: #fff;
+  border: 1px solid #777;
+}
+
+body.dark .filter-container select:hover {
+  border-color: #d8b08c;
+}

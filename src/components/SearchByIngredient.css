@@ -206,213 +206,7 @@ h2 {
   }
 }
 
-/* Medium screens (768px to 1199px) */
-@media (max-width: 1199px) and (min-width: 768px) {
-  .ingredient-container {
-    width: 70%;
-    padding: 35px;
-  }
 
-  .ingredient-title {
-    font-size: 26px;
-  }
-
-  .ingredient-input {
-    font-size: 17px;
-    padding: 15px;
-  }
-
-  .ingredient-btn {
-    padding: 12px 16px;
-    font-size: 20px;
-  }
-
-  .select-cuisine,
-  .submit-btn,
-  .reset-btn {
-    padding: 14px 24px;
-    font-size: 17px;
-  }
-
-  .voiced-btns {
-    right: 110px;
-    font-size: 20px;
-    padding: 4px 7px;
-  }
-}
-
-/* Small screens (480px to 767px) */
-@media (max-width: 767px) and (min-width: 480px) {
-  .ingredient-container {
-    width: 85%;
-    padding: 20px;
-    margin-top: 20px;
-  }
-
-  .ingredient-container,
-  h2 {
-    font-size: 1.6rem;
-    margin-top: 20px;
-  }
-
-  .ingredient-title {
-    font-size: 22px;
-    margin-bottom: 20px;
-  }
-
-  .ingredient-form {
-    gap: 14px;
-  }
-
-  .ingredient-input-group {
-    gap: 8px;
-    max-width: 100%;
-  }
-
-  .ingredient-input {
-    width: 55%;
-    font-size: 16px;
-    padding: 12px;
-  }
-
-  .voiced-btns {
-    right: 55px;
-    font-size: 18px;
-    padding: 4px 6px;
-  }
-
-  .ingredient-btn {
-    padding: 10px 14px;
-    font-size: 13px;
-  }
-
-  .select-cuisine,
-  .submit-btn,
-  .reset-btn {
-    padding: 12px 20px;
-    font-size: 16px;
-    margin-top: 20px;
-    margin-right: 10px;
-  }
-}
-
-/* Extra small screens (below 480px) */
-@media (max-width: 479px) {
-  .ingredient-container {
-    width: 95%;
-    padding: 20px;
-    margin: 10px auto;
-    border-radius: 12px;
-  }
-
-  .ingredient-container,
-  h2 {
-    font-size: 1.4rem;
-    margin-top: 15px;
-  }
-
-  .ingredient-title {
-    font-size: 20px;
-    margin-bottom: 15px;
-  }
-
-  .ingredient-form {
-    gap: 12px;
-  }
-
-  .ingredient-input-group {
-    flex-direction: column;
-    gap: 10px;
-    align-items: stretch;
-  }
-
-  .ingredient-input {
-    width: 100%;
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .ingredient-btn {
-    padding: 8px 12px;
-    font-size: 16px;
-    align-self: center;
-  }
-
-  .select-cuisine,
-  .submit-btn,
-  .reset-btn {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 14px;
-    margin-top: 15px;
-    margin-right: 0;
-  }
-
-  .voiced-btns {
-    position: static;
-    margin-top: 10px;
-    font-size: 16px;
-    padding: 8px 10px;
-  }
-}
-
-/* Very small screens (below 360px) */
-@media (max-width: 359px) {
-  .ingredient-container {
-    width: 98%;
-    padding: 15px;
-    margin: 5px auto;
-  }
-
-  .ingredient-title {
-    font-size: 18px;
-  }
-
-  .ingredient-input {
-    font-size: 13px;
-    padding: 8px;
-  }
-
-  .ingredient-btn {
-    padding: 6px 10px;
-    font-size: 14px;
-  }
-
-  .select-cuisine,
-  .submit-btn,
-  .reset-btn {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-
-  .voiced-btns {
-    font-size: 14px;
-    padding: 6px 8px;
-  }
-}
-
-/* Landscape orientation adjustments for mobile */
-@media (max-width: 767px) and (orientation: landscape) {
-  .ingredient-container {
-    margin-top: 10px;
-    padding: 20px;
-  }
-
-  .ingredient-container,
-  h2 {
-    margin-top: 10px;
-  }
-
-  .ingredient-title {
-    margin-bottom: 15px;
-  }
-
-  .select-cuisine,
-  .submit-btn,
-  .reset-btn {
-    margin-top: 15px;
-  }
-}
 
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
@@ -432,4 +226,56 @@ h2 {
   .voiced-btns:active {
     transform: scale(0.9);
   }
+}
+
+/* === DARK MODE STYLES === */
+body.dark .ingredient-container {
+  background: #2e2b28;
+  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.05);
+}
+body.dark .ingredient-container,h2 {
+  color: #f0e6dc;
+}
+body.dark .ingredient-title {
+  color: #f0e6dc;
+}
+
+body.dark .ingredient-input {
+  background-color: #3a3029;
+  color: #f5f5f5;
+  border-color: #a67c52;
+}
+
+body.dark .ingredient-input:focus {
+  border-color: #e0c5a2;
+}
+
+body.dark .ingredient-btn.add {
+  background: #a67c52;
+}
+
+body.dark .ingredient-btn.remove {
+  background: #d65e0f;
+}
+
+body.dark .select-cuisine,
+body.dark .submit-btn,
+body.dark .reset-btn {
+  background: #a67c52;
+  color: #fff;
+}
+
+body.dark .select-cuisine:hover,
+body.dark .submit-btn:hover,
+body.dark .reset-btn:hover {
+  background: #d65e0f;
+}
+
+body.dark .voiced-btns {
+  background-color: #614130;
+  color: white;
+}
+
+body.dark .voiced-btns:hover {
+  background-color: #a67c52;
 }

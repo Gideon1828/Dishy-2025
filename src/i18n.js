@@ -101,6 +101,7 @@ const resources = {
           register: "Register",
           favorites:" Favorites",
           changePassword: "Change Password",
+          darkmode: "Dark Mode",
           logout: "Logout"
         }
       },
@@ -289,6 +290,7 @@ const resources = {
           register: "பதிவு",
           favorites: "பிடித்தவை",
           changePassword: "கடவுச்சொல்லை மாற்றவும்",
+          darkmode: "இருண்ட முறை",
           logout: "வெளியேறு",
         }
       },

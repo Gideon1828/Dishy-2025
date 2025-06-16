@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect ,useContext} from "react"
 import { useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import "./Header.css"
@@ -10,6 +10,7 @@ import LanguageSwitcher from "../LanguageSwitcher"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faHeart, faBars, faTimes, faSearch } from "@fortawesome/free-solid-svg-icons"
 import axios from "axios"
+import { ThemeContext } from "../context/ThemeContext";
 
 const Header = () => {
   const { t } = useTranslation()
@@ -22,6 +23,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchExpanded, setSearchExpanded] = useState(false)
 
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
   }
@@ -235,6 +237,14 @@ const Header = () => {
                   <Link to="/change-password" className="dropdown-item" onClick={() => setMobileMenuOpen(false)}>
                     {t("header.nav.changePassword") || "Change Password"}
                   </Link>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => {
+                    setDarkMode(!darkMode);
+                    setMobileMenuOpen(false);
+                    }}>
+                    {t("header.nav.darkmode") || "Dark Mode"} {darkMode && "✔️"}
+                  </div>
                   <Link to="/" onClick={handleLogout} className="btn logout-btn">
                     {t("header.nav.logout") || "Logout"}
                   </Link>
