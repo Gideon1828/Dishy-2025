@@ -12,6 +12,7 @@ const Favorites = () => {
   const [loading, setLoading] = useState(true);
   const [favoriteIds, setFavoriteIds] = useState([]);
   const [sortOrder, setSortOrder] = useState("latest"); // New sorting state
+const [ratingsMap, setRatingsMap] = useState({});
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -34,6 +35,51 @@ const Favorites = () => {
 
     fetchFavorites();
   }, []);
+  useEffect(() => {
+  const fetchRatings = async () => {
+    const token = localStorage.getItem("token");
+    if (!token || favorites.length === 0) return;
+
+    const fetches = favorites.map(async (recipe) => {
+      try {
+        const res = await fetch(`https://dishy-2g4s.onrender.com/rate-comment/${recipe.id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        const ratedOnly = data.allRatings.filter(r => r.rating > 0);
+        const average = ratedOnly.length
+          ? +(ratedOnly.reduce((sum, r) => sum + r.rating, 0) / ratedOnly.length).toFixed(1)
+          : null;
+
+        return {
+          recipeId: recipe.id,
+          averageRating: average,
+          userCount: ratedOnly.length
+        };
+      } catch (err) {
+        console.error("Failed to fetch ratings for", recipe.id, err);
+        return null;
+      }
+    });
+
+    const results = await Promise.all(fetches);
+
+    const ratingsMap = {};
+    results.forEach(r => {
+      if (r) {
+        ratingsMap[r.recipeId] = {
+          averageRating: r.averageRating,
+          userCount: r.userCount,
+        };
+      }
+    });
+
+    setRatingsMap(ratingsMap);
+  };
+
+  fetchRatings();
+}, [favorites]);
+
 
   // Sort favorites based on sortOrder state
 const sortedFavorites = [...favorites].sort((a, b) => {
@@ -146,6 +192,33 @@ const sortedFavorites = [...favorites].sort((a, b) => {
                       🔗 Share
                     </button>
                   </div>
+                  {ratingsMap[recipe.id] && ratingsMap[recipe.id].averageRating != null && (
+
+  <div className="average-rating-display">
+    <span style={{ fontWeight: "bold", fontSize: "14px", marginRight: "4px" }}>
+      Avg Rating:
+    </span>
+    {[1, 2, 3, 4, 5].map(i => (
+      <span
+        key={i}
+        style={{
+          color:
+            i <= Math.floor(ratingsMap[recipe.id].averageRating)
+              ? "#f5c518"
+              : i - 0.5 <= ratingsMap[recipe.id].averageRating
+              ? "#f5c518"
+              : "#ccc",
+          fontSize: "16px"
+        }}
+      >
+        ★
+      </span>
+    ))}
+    <span style={{ marginLeft: "6px", fontSize: "13px" }}>
+      {ratingsMap[recipe.id].averageRating} ({ratingsMap[recipe.id].userCount} )
+    </span>
+  </div>
+)}
                 </div>
               );
             })}

@@ -13,7 +13,6 @@ const VisitDish = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const allRecipes = location.state?.recipes || [];
-
   const [dish, setDish] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [showIngredientModal, setShowIngredientModal] = useState(false);
@@ -27,12 +26,9 @@ const VisitDish = () => {
   const [editedText, setEditedText] = useState("");
   const commentsPerPage = 5;
 
-  
-  
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
     setIsFavorite(favorites.some(fav => fav.id === parseInt(id)));
-
     const fetchDishDetails = async () => {
       try {
         setDish(null);
@@ -47,7 +43,6 @@ const VisitDish = () => {
         console.error(error);
       }
     };
-
     const fetchRatingsAndComments = async () => {
       try {
         const token = localStorage.getItem("token");
@@ -66,12 +61,10 @@ const VisitDish = () => {
         console.error("Error fetching ratings/comments:", err);
       }
     };
-
     fetchDishDetails();
     fetchRatingsAndComments();
   }, [id]);
     
-
    useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -79,6 +72,7 @@ const VisitDish = () => {
       setCurrentUser({ id: payload.id, email: payload.email });
     }
   }, []);
+
    const handleRatingClick = async (rating) => {
     const token = localStorage.getItem("token");
     if (!token) return toast.error("Login to rate");
@@ -120,7 +114,6 @@ const handleCancelEdit = () => {
 const handleUpdateComment = async (commentId) => {
   try {
     const token = localStorage.getItem("token");
-
     console.log("Trying to update comment ID:", commentId);
     console.log("Trying to update token ID:", token);
     const res = await fetch(`https://dishy-2g4s.onrender.com/api/comments/${commentId}`, {
@@ -131,13 +124,10 @@ const handleUpdateComment = async (commentId) => {
       },
       body: JSON.stringify({ comment: editedText }),
     });
-
     if (!res.ok) throw new Error("Failed to update comment");
-
     toast.success("Comment updated");
     setEditingCommentId(null);
     setEditedText("");
-
     // Refresh comments
     const updatedRes = await fetch(`https://dishy-2g4s.onrender.com/rate-comment/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -153,21 +143,16 @@ const handleUpdateComment = async (commentId) => {
 
 const handleDeleteComment = async (commentId) => {
   if (!window.confirm("Are you sure you want to delete this comment?")) return;
-
   try {
     const token = localStorage.getItem("token");
-    
     const res = await fetch(`https://dishy-2g4s.onrender.com/api/comments/${commentId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
     if (!res.ok) throw new Error("Failed to delete comment");
-
     toast.success("Comment deleted");
-
     // Refresh comments
     const updatedRes = await fetch(`https://dishy-2g4s.onrender.com/rate-comment/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -185,7 +170,6 @@ const handleDeleteComment = async (commentId) => {
     if (!newComment.trim()) return toast.error("Comment cannot be empty");
     const token = localStorage.getItem("token");
     if (!token) return toast.error("Login required");
-
     try {
       const res = await fetch(`https://dishy-2g4s.onrender.com/rate-comment`, {
         method: "POST",
@@ -195,9 +179,7 @@ const handleDeleteComment = async (commentId) => {
         },
         body: JSON.stringify({ dishId: id, comment: newComment }),
       });
-
       if (!res.ok) throw new Error("Comment failed");
-
       toast.success("Comment added");
       setNewComment("");
       const updatedRes = await fetch(`https://dishy-2g4s.onrender.com/rate-comment/${id}`, {
@@ -210,8 +192,6 @@ const handleDeleteComment = async (commentId) => {
       toast.error("Failed to post comment");
     }
   };
-
- 
 
   const handleFavorite = () => {
     if (!dish) return;
@@ -243,11 +223,27 @@ const handleDeleteComment = async (commentId) => {
   const indexOfFirstComment = indexOfLastComment - commentsPerPage;
   const currentComments = comments.slice(indexOfFirstComment, indexOfLastComment);
   const totalPages = Math.ceil(comments.length / commentsPerPage);
+  const getRelativeTime = (timestamp) => {
+  const now = new Date();
+  const past = new Date(timestamp);
+  const diffInSeconds = Math.floor((now - past) / 1000);
+  const minutes = Math.floor(diffInSeconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
 
+  if (days >= 1) return `${days} day${days > 1 ? 's' : ''} ago`;
+  if (hours >= 1) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  if (minutes >= 1) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  return "Just now";
+};
+
+
+const ratedUsers = ratings.filter(r => typeof r.rating === "number" && r.rating > 0);
+const averageRating = ratedUsers.length
+  ? (ratedUsers.reduce((acc, r) => acc + r.rating, 0) / ratedUsers.length).toFixed(1)
+  : 0;
   if (!dish) return <div className="loading">Loading...</div>;
-
   const suggestedRecipes = allRecipes.filter(recipe => recipe.id !== parseInt(id)).slice(0, 6);
-
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <ToastContainer position="bottom-right" autoClose={3000} />
@@ -319,10 +315,23 @@ const handleDeleteComment = async (commentId) => {
           </div>
         </div>
 
-       
-
         <div className="feedback-section">
           <h2 className="section-title">Ratings & Comments</h2>
+          <div className="average-rating-display" style={{ margin: "10px 0" }}>
+  <span style={{ fontWeight: "bold", marginRight: "8px" }}>Average Rating:</span>
+  {[1, 2, 3, 4, 5].map(i => (
+    <span
+      key={i}
+      style={{ color: i <= Math.floor(averageRating) ? "#f5c518" : (i - 0.5 <= averageRating ? "#f5c518" : "#ccc"), fontSize: "20px" }}
+    >
+      ★
+    </span>
+  ))}
+  <span style={{ marginLeft: "8px" }}>
+  {averageRating} ({ratedUsers.length} user{ratedUsers.length !== 1 ? "s" : ""})
+</span>
+
+</div>
 
           <div className="rating-input">
             {[1, 2, 3, 4, 5].map(i => (
@@ -363,7 +372,8 @@ const handleDeleteComment = async (commentId) => {
                       ) : (
                         <>
                           <p>{cmt.comment}</p>
-                          <span>{new Date(cmt.timestamp).toLocaleString()}</span>
+                          <span style={{ fontSize: "12px", color: "#777" }}>{getRelativeTime(cmt.createdAt)}</span>
+
                           {currentUser?.id === cmt.userId && (
                             <div className="comment-actions">
                               <button onClick={() => handleEditClick(cmt._id, cmt.comment)}>Edit</button>
@@ -388,9 +398,6 @@ const handleDeleteComment = async (commentId) => {
             )}
           </div>
         </div>
-
-       
-
         <div className="section">
           <h2 className="section-title">Suggested Dishes</h2>
           <div className="suggestions-grids">
@@ -406,17 +413,14 @@ const handleDeleteComment = async (commentId) => {
           </div>
         </div>
       </div>
-
       {showIngredientModal && (
         <IngredientList
           ingredients={dish.extendedIngredients}
           onClose={() => setShowIngredientModal(false)}
         />
       )}
-
       <Footer />
     </div>
   );
 };
-
 export default VisitDish;
