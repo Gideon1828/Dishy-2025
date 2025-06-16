@@ -1,5 +1,5 @@
 import './Home1.css'
-
+import React, { useEffect, useState } from "react";
 import Hero from "../components/Hero";
 import SwipeCarousel from "../components/SwipeCarousel";
 import AuthComponent from "../components/AuthComponent";
@@ -10,6 +10,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const Home1 = () => {
+  useEffect(() => {
+    localStorage.removeItem("token");
+  }, []);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Header/>
