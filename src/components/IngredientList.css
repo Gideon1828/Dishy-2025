@@ -193,3 +193,76 @@ body.dark .generate-btn {
 body.dark .generate-btn:hover {
   background-color: #a67c52;
 }
+
+/* === Responsive Styles === */
+@media (max-width: 768px) {
+  .modal-overlay {
+    margin-top: 100px; 
+    padding: 80px 10px 10px 10px; /* reduced padding for smaller screens */
+    align-items: flex-start;
+  }
+
+  .modal-content {
+    max-width: 95%;
+    padding: 20px;
+    max-height: 80vh;
+  }
+
+  .modal-content h2 {
+    font-size: 20px;
+  }
+
+  th, td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  select,
+  input[type="text"] {
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .generate-btn {
+    width: 100%;
+    font-size: 15px;
+    padding: 10px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 60px 8px 8px 8px;
+  }
+
+  .modal-content {
+    padding: 16px;
+    max-height: 85vh;
+  }
+
+  .modal-content h2 {
+    font-size: 18px;
+  }
+
+  th, td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .close-btn {
+    top: 10px;
+    right: 12px;
+    font-size: 16px;
+  }
+
+  select,
+  input[type="text"] {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .generate-btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

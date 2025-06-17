@@ -1,61 +1,130 @@
 .heroContainer {
-    display: flex;
-    align-items: left;
-    justify-content: left;
-    
-    padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.textContainer {
+  max-width: 800px;
+  padding-right: 1.5rem;
+}
+
+h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 3em;
+  font-weight: bold;
+  color: #333;
+}
+
+p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.7rem;
+  margin-top: 20px;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.problemList {
+  font-family: 'Open Sans', sans-serif;
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 1.3rem;
+  color: #666;
+}
+
+.problemList li {
+  margin-bottom: 0.3rem;
+}
+
+.createRecipeBtn {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  padding: 10px 60px;
+  background-color: #d6b6b6;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.createRecipeBtn:hover {
+  background-color: #c5a6a6;
+  text-decoration: none;
+}
+
+/* === Responsive Media Queries === */
+
+@media (max-width: 1024px) {
+  .heroContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
   }
-  
-  .textContainer {
-    max-width: 800px;
-    padding-right: 1.5rem;
-  }
-  
+
   h1 {
-    font-family: 'Montserrat', sans-serif;
-    font-size:3.0em;
-    font-weight: bold;
-    color: #333;
-    
+    font-size: 2.5em;
   }
-  
+
   p {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.7rem;
-    margin-top: 20px;
-    color: #555;
-    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
   }
-  
-  .problemList {
-    font-family: 'Open Sans', sans-serif;
-    list-style-type: none;
-    padding-left: 0;
-    font-size: 1.3rem;
-    color: #666;
-  }
-  
-  .problemList li {
-    font-family: 'Open Sans', sans-serif;
-    margin-bottom: 0.3rem;
-  }
-  
+
   .createRecipeBtn {
-    display: block;
-    font-family: 'Montserrat', sans-serif;
-    padding: 10px 200px;
-    background-color: #d6b6b6;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 1rem;
-    font-weight: bold;
-    text-decoration: none;transition: background-color 0.2s, color 0.2s;
+    padding: 10px 40px;
+    font-size: 1rem;
   }
-  
-  .createRecipeBtn:hover {
-    background-color: #c5a6a6;
-    text-decoration: none;
-    
+}
+
+@media (max-width: 768px) {
+  .heroContainer {
+    padding: 1rem;
   }
-  
+
+  .textContainer {
+    padding-right: 0;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  p {
+    font-size: 1.3rem;
+  }
+
+  .problemList {
+    font-size: 1.1rem;
+  }
+
+  .createRecipeBtn {
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.7em;
+  }
+
+  p {
+    font-size: 1.1rem;
+  }
+
+  .problemList {
+    font-size: 1rem;
+  }
+
+  .createRecipeBtn {
+    padding: 10px 0;
+    font-size: 0.95rem;
+  }
+}

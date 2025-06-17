@@ -259,3 +259,108 @@ body.dark .filter-container select {
 body.dark .filter-container select:hover {
   border-color: #d8b08c;
 }
+
+@media (max-width: 768px) {
+  .results-container {
+    padding: 15px;
+    margin-top: 30px;
+  }
+
+  .filter-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-right: 10px;
+    margin-bottom: 15px;
+  }
+
+  .filter-container label {
+    margin-bottom: 5px;
+  }
+
+  .filter-container select {
+    width: 100%;
+  }
+
+  .results-grid {
+    gap: 30px;
+  }
+
+  .recipe-card {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .select-filter {
+    font-size: 16px;
+    padding: 12px 20px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 36px;
+  }
+
+  .load-more-btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .share-btn,
+  .view-recipe {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .results-container {
+    padding: 10px;
+    margin-top: 20px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  .recipe-card {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .recipe-card img {
+    height: 160px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  .select-filter {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  .load-more-btn {
+    font-size: 14px;
+  }
+
+  .share-btn,
+  .view-recipe {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .filter-container {
+    padding-right: 0;
+    align-items: stretch;
+  }
+
+  .filter-container select {
+    font-size: 14px;
+  }
+}

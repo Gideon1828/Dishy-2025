@@ -1,14 +1,11 @@
-
-
+/* Base Footer Styles */
 .footer {
   width: 100%;
   background-color: rgb(59, 47, 36);
   color: #e0d5c8;
   padding: 10px 0;
   text-align: center;
-  margin-top: 0px; /* Ensures footer stays at the bottom */
-  margin-bottom: 0;
-  padding-bottom: 0;
+  margin: 0;
 }
 
 .footer-container {
@@ -17,14 +14,18 @@
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 5px 0;
+  align-items: flex-start;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+  gap: 30px;
 }
 
 .footer-left {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  flex: 1;
+  min-width: 220px;
 }
 
 .footer-logo {
@@ -50,6 +51,8 @@
 
 .footer-center,
 .footer-right {
+  flex: 1;
+  min-width: 220px;
   text-align: left;
 }
 
@@ -63,6 +66,7 @@
 .footer-center ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .footer-center ul li a {
@@ -85,11 +89,12 @@
 
 .footer-copyright {
   font-family: 'Pacifico', cursive;
-  margin-top: 10px;
+  margin-top: 15px;
   font-size: 14px;
+  text-align: center;
 }
 
-/* === DARK MODE STYLES === */
+/* === DARK MODE === */
 body.dark .footer {
   background-color: #1e1b18;
   color: #f5f5f5;
@@ -108,4 +113,75 @@ body.dark .footer-copyright {
 body.dark .footer-center ul li a:hover {
   color: #ffffff;
   text-decoration: underline;
+}
+
+/* === Responsive Styles === */
+@media (max-width: 1024px) {
+  .footer-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-logo {
+    margin: 0 auto 10px auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-title {
+    font-size: 20px;
+  }
+
+  .footer-tagline {
+    font-size: 14px;
+  }
+
+  .footer-center h3,
+  .footer-right h3 {
+    font-size: 15px;
+  }
+
+  .footer-center ul li a,
+  .footer-right p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    margin-left: 70px;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 10px;
+  }
+
+  .footer-title {
+    font-size: 18px;
+  }
+
+  .footer-tagline {
+    font-size: 13px;
+  }
+
+  .footer-center h3,
+  .footer-right h3 {
+    font-size: 14px;
+  }
+
+  .footer-center ul li a,
+  .footer-right p {
+    font-size: 14px;
+  }
+
+  .footer-logo {
+    width: 40px;
+  }
 }

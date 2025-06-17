@@ -22,7 +22,7 @@ const Header = () => {
   })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchExpanded, setSearchExpanded] = useState(false)
-
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
@@ -47,6 +47,9 @@ const Header = () => {
         .then((response) => {
           setUsernames(response.data.username)
           setIsLoggedIn(true)
+          if (window.innerWidth < 768) {
+          setSearchExpanded(false);
+        }
         })
         .catch((error) => {
           console.error("Error fetching data:", error)
@@ -62,6 +65,14 @@ const Header = () => {
     // Close mobile menu when route changes
     setMobileMenuOpen(false)
   }, [location])
+  
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   const name = usernames
   const user = {
@@ -143,31 +154,33 @@ const Header = () => {
         </div>
 
         {/* Search Bar - Only visible on desktop */}{/* Search Bar - Positioned below header container like in original */}
-      {isLoggedIn && (
-        <div className={`header-search-bar ${searchExpanded ? "expanded" : ""}`}>
-          <input type="text" placeholder="Search Any Dish" value={dish} onChange={(e) => setDish(e.target.value)} />
+{isLoggedIn && (
+  (!isMobile || (isMobile && searchExpanded)) && (
+    <div className={`header-search-bar ${searchExpanded ? "expanded" : ""}`}>
+      <input type="text" placeholder="Search Any Dish" value={dish} onChange={(e) => setDish(e.target.value)} />
 
-          <select onChange={(e) => setCuisine(e.target.value)} value={cuisine}>
-            <option value="">Cuisine</option>
-            <option value="Any">Any</option>
-            <option value="Indian">Indian</option>
-            <option value="Mexican">Mexican</option>
-            <option value="Chinese">Chinese</option>
-            <option value="Italian">Italian</option>
-            <option value="Japanese">Japanese</option>
-            <option value="French">French</option>
-            <option value="Thai">Thai</option>
-            <option value="Mediterranean">Mediterranean</option>
-            <option value="Middle Eastern">Middle Eastern</option>
-            <option value="Vietnamese">Vietnamese</option>
-            <option value="Korean">Korean</option>
-            <option value="Burmese">Burmese</option>
-          </select>
-          <button className="header-submit-btn" onClick={handleSearch}>
-            Search
-          </button>
-        </div>
-      )}
+      <select onChange={(e) => setCuisine(e.target.value)} value={cuisine}>
+        <option value="">Cuisine</option>
+        <option value="Any">Any</option>
+        <option value="Indian">Indian</option>
+        <option value="Mexican">Mexican</option>
+        <option value="Chinese">Chinese</option>
+        <option value="Italian">Italian</option>
+        <option value="Japanese">Japanese</option>
+        <option value="French">French</option>
+        <option value="Thai">Thai</option>
+        <option value="Mediterranean">Mediterranean</option>
+        <option value="Middle Eastern">Middle Eastern</option>
+        <option value="Vietnamese">Vietnamese</option>
+        <option value="Korean">Korean</option>
+        <option value="Burmese">Burmese</option>
+      </select>
+      <button className="header-submit-btn" onClick={handleSearch}>
+        Search
+      </button>
+    </div>
+  )
+)}
 
         {/* Mobile Controls - Only visible on mobile */}
         <div className="mobile-controls">

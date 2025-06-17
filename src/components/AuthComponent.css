@@ -1,78 +1,153 @@
 .auth-container {
-    width: 100%;
-    text-align: center;
-    margin: 0 auto;
-  }
-  
-  
-  
-  .content {
-    max-width: 1300px;
-    margin: auto;
-    padding: 20px;
-  }
-  
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 1300px;
+  margin: auto;
+  padding: 20px;
+}
+
+.title {
+  font-family: 'Pacifico', cursive;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.description {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.3rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.image {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+  margin: 20px auto;
+  color: #555;
+}
+
+.what-can-you-do h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.8rem;
+  margin: 20px 0;
+  color: #555;
+}
+
+.lists {
+  font-family: 'Open Sans', sans-serif;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin: 20px auto;
+  color: #555;
+}
+
+.list {
+  font-family: 'Open Sans', sans-serif;
+  text-align: left;
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #555;
+  min-width: 200px;
+}
+
+.list li {
+  font-size: 1.2rem;
+  margin: 10px 0;
+  color: #555;
+}
+
+.closing-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 30px 0;
+  color: #555;
+}
+
+/* Responsive CSS */
+@media screen and (max-width: 1024px) {
   .title {
-    font-family: 'Pacifico', cursive;
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
+    font-size: 2.5rem;
   }
-  
+
   .description {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.3rem;
-    color: #555;
-    margin-bottom: 20px;
-  }
-  
-  .image {
-    width: 720px;
-    height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
-    display: block;
-    margin: 20px auto;
-    color: #555;
-  }
-  
-  .what-can-you-do h3 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.8rem;
-    margin: 20px 0;
-    color: #555;
-  }
-  
-  .lists {
-    font-family: 'Open Sans', sans-serif;
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-    margin: 20px auto;
-    color: #555;
-  }
-  
-  .list {
-    font-family: 'Open Sans', sans-serif;
-    text-align: left;
-    list-style-type: disc;
-    padding-left: 20px;
-    color: #555;
-  }
-  
-  .list li {
-    font-family: 'Open Sans', sans-serif;
     font-size: 1.2rem;
-    margin: 10px 0;
-    color: #555;
   }
-  
+
+  .what-can-you-do h3 {
+    font-size: 1.6rem;
+  }
+
+  .list li {
+    font-size: 1.1rem;
+  }
+
   .closing-text {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 30px 0;
-    color: #555;
+    font-size: 1.3rem;
   }
-  
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1.1rem;
+  }
+
+  .lists {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .list {
+    padding-left: 15px;
+  }
+
+  .what-can-you-do h3 {
+    font-size: 1.4rem;
+  }
+
+  .list li {
+    font-size: 1rem;
+  }
+
+  .closing-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .title {
+    font-size: 1.7rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .what-can-you-do h3 {
+    font-size: 1.2rem;
+  }
+
+  .list li {
+    font-size: 0.95rem;
+  }
+
+  .closing-text {
+    font-size: 1rem;
+  }
+}

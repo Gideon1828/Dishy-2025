@@ -99,6 +99,9 @@
 
 
 @media (max-width: 600px) {
+  .welcome-box{
+    margin-top: 100px;
+  }
   .image-slider {
     height: 220px;
   }

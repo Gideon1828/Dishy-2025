@@ -3,17 +3,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 }
 
 .phone-frame {
-  position:absolute;
+  position: relative;
   margin-top: 50px;
   overflow: hidden;
-  border-radius: 20px; /* More rounded for a phone look */
-  width: 600px; /* Phone-like width */
-  height: 540px; /* Adjusted for proper phone screen ratio */
+  border-radius: 20px;
+  width: 600px;
+  height: 540px;
   background-color: black;
-  box-shadow: 0px 8px 4px rgba(0, 0, 0, 0.5); /* Stronger shadow */
+  box-shadow: 0px 8px 4px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,6 +36,7 @@
   display: flex;
   justify-content: center;
   gap: 6px;
+  z-index: 2;
 }
 
 .dot {
@@ -49,4 +51,52 @@
 .dot.active {
   background-color: white;
   opacity: 1;
+}
+
+/* === Responsive Media Queries === */
+
+/* Tablet View */
+@media (max-width: 1024px) {
+  .phone-frame {
+    width: 450px;
+    height: 480px;
+    margin-top: 40px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  .phone-frame {
+    width: 320px;
+    height: 420px;
+    margin-top: 30px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Small Mobile View */
+@media (max-width: 480px) {
+  .phone-frame {
+    width: 280px;
+    height: 400px;
+    margin-top: 20px;
+  }
+
+  .carousel-container {
+    padding: 0.5rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
 }

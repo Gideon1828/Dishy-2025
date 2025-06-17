@@ -111,3 +111,48 @@
   }
 }
 
+@media (max-width: 768px) {
+  .confirm-modal-content {
+    padding: 20px;
+    max-width: 90%;
+    width: 90%;
+  }
+
+  .confirm-logo {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0.75rem;
+  }
+
+  .confirm-modal-content p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .confirm-buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .confirm-yes,
+  .confirm-no {
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .confirm-modal-content {
+    padding: 16px;
+  }
+
+  .confirm-modal-content p {
+    font-size: 0.95rem;
+  }
+
+  .confirm-yes,
+  .confirm-no {
+    font-size: 0.9rem;
+  }
+}
