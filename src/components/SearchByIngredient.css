@@ -1,88 +1,127 @@
 /* Container */
 .ingredient-container {
   width: 60%;
-  margin: auto;
-  padding: 40px;
-  text-align: center;
-  background: #fff9f2;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  margin: 60px auto;
+  padding: 48px;
+  background: #fffefc;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-}
-
-.ingredient-container,
-h2 {
-  font-family: 'Pacifico', cursive;
-  color: #8d6e63;
-  margin-top: 40px;
-  font-family: sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
+  text-align: center;
 }
 
 /* Title */
-.ingredient-title {
+.ingredient-container h2 {
   font-family: 'Montserrat', sans-serif;
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 25px;
-  color: #5c3d2e;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4b3621;
+  margin-bottom: 16px;
 }
 
-/* Form Wrapper */
+.ingredient-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #5c3d2e;
+  margin-bottom: 30px;
+}
+
+/* Form */
 .ingredient-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   align-items: center;
+  justify-content: center;
 }
 
-/* Input Group */
+/* Ingredient Group */
 .ingredient-input-group {
-  font-family: 'Open Sans', sans-serif;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  position: relative;
   width: 100%;
   max-width: 600px;
-  position: relative;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
 }
 
-/* Input Fields */
+/* Input */
 .ingredient-input {
-  font-family: 'Open Sans', sans-serif;
-  width: 75%;
-  padding: 10px;
-  border: 3px solid #a67c52;
+  flex-grow: 1;
+  paddingRight: "44px";
+  width: 100% !important;
+  padding: 12px 42px 12px 14px;
+  font-size: 16px;
+  border: 2px solid #a67c52;
   border-radius: 8px;
-  font-size: 18px;
-  outline: none;
-  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .ingredient-input:focus {
   border-color: #5c3d2e;
+  background: #fffaf5;
+}
+
+/* Voice Button */
+.voiced-btns {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  background-color: #5c3d2e;
+  border: none;
+  border-radius: 50%;
+  padding: 6px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  z-index: 2;
+  height: 32px;
+  width: 32px;
+}
+
+
+.voiced-btns:hover {
+  background-color: #a67c52;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.voiced-btns.clicked {
+  background-color: #d65e0f !important;
+  animation: bounce 0.4s ease-in-out;
+}
+
+@keyframes bounce {
+  0%   { transform: translateY(-50%) scale(0.9); }
+  50%  { transform: translateY(-60%) scale(1.05); }
+  100% { transform: translateY(-50%) scale(0.95); }
 }
 
 /* Ingredient Buttons */
 .ingredient-btn {
-  font-family: 'Montserrat', sans-serif;
-  padding: 14px 18px;
-  font-size: 22px;
   border: none;
-  cursor: pointer;
   border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
   transition: 0.3s;
+  padding: 12px 16px;
+  color: white;
 }
 
 .ingredient-btn.add {
-  background: #5c3d2e;
-  color: white;
+  background: #4b3621;
 }
 
 .ingredient-btn.remove {
-  background: #ff5c5c;
-  color: white;
+  background: #d93636;
 }
 
 .ingredient-btn:hover {
@@ -91,124 +130,43 @@ h2 {
 
 /* Cuisine Selector */
 .select-cuisine {
-  font-family: 'Montserrat', sans-serif;
-  margin-top: 25px;
-  background: #5c3d2e;
-  color: white;
-  padding: 16px 28px;
+  margin-top: 24px;
+  padding: 14px 22px;
+  font-size: 17px;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-  margin-right: 20px;
-}
-
-/* Submit Button */
-.submit-btn {
-  font-family: 'Montserrat', sans-serif;
-  margin-top: 25px;
+  border-radius: 10px;
   background: #5c3d2e;
-  color: white;
-  padding: 16px 28px;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
+  color: #fff;
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
   transition: 0.3s ease-in-out;
 }
 
-.submit-btn:hover {
+/* Submit / Reset Buttons */
+.submit-btn, .reset-btn {
+  margin-top: 20px;
+  padding: 14px 24px;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  background: #5c3d2e;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.submit-btn:hover,
+.reset-btn:hover,
+.select-cuisine:hover {
   background: #a67c52;
   transform: scale(1.05);
 }
 
-.reset-btn {
-  font-family: 'Montserrat', sans-serif;
-  margin-top: 25px;
-  background: #5c3d2e;
-  color: white;
-  padding: 16px 28px;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-}
 
-.reset-btn:hover {
-  background: #a67c52;
-  transform: scale(1.05);
-}
-
-/* Voice Button Styles */
-.voiced-btns {
-  background-color: #614130;
-  position: absolute;
-  right: 127px;
-  border-radius: 50%;
-  border: none;
-  cursor: pointer;
-  font-size: 22px;
-  padding: 5px 8px;
-  transition: all 0.3s ease-in-out;
-  outline: none;
-}
-
-.voiced-btns:hover {
-  background-color: #a67c52;
-  transform: scale(1.1);
-}
-
-.voiced-btns.clicked {
-  background-color: #d65e0f !important;
-  transform: scale(0.9);
-  animation: bounce 0.5s ease-in-out;
-}
-
-@keyframes bounce {
-  0% {
-    transform: scale(0.9) translateY(0);
-  }
-  50% {
-    transform: scale(1.0) translateY(-5px);
-  }
-  100% {
-    transform: scale(0.9) translateY(0);
-  }
-}
-
-/* Responsive Design */
-
-/* Large screens (1200px and up) */
-@media (min-width: 1200px) {
-  .ingredient-container {
-    width: 50%;
-    padding: 50px;
-  }
-
-  .ingredient-title {
-    font-size: 32px;
-  }
-
-  .ingredient-input {
-    font-size: 20px;
-    padding: 18px;
-  }
-
-  .voiced-btns {
-    right: 140px;
-    font-size: 24px;
-    padding: 6px 10px;
-  }
-}
-
-
-
-/* Touch device optimizations */
+/* Touch Optimization */
 @media (hover: none) and (pointer: coarse) {
   .ingredient-btn:hover,
   .submit-btn:hover,
@@ -228,26 +186,27 @@ h2 {
   }
 }
 
-/* === DARK MODE STYLES === */
+/* === Dark Mode === */
 body.dark .ingredient-container {
   background: #2e2b28;
-  box-shadow: 0 6px 15px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.05);
+  color: #f5f5f5;
 }
-body.dark .ingredient-container,h2 {
-  color: #f0e6dc;
-}
-body.dark .ingredient-title {
+
+body.dark .ingredient-title,
+body.dark .ingredient-container h2 {
   color: #f0e6dc;
 }
 
 body.dark .ingredient-input {
-  background-color: #3a3029;
+  background: #3a3029;
   color: #f5f5f5;
   border-color: #a67c52;
 }
 
 body.dark .ingredient-input:focus {
   border-color: #e0c5a2;
+  background: #4a3b34;
 }
 
 body.dark .ingredient-btn.add {
@@ -272,10 +231,121 @@ body.dark .reset-btn:hover {
 }
 
 body.dark .voiced-btns {
-  background-color: #614130;
+  background: #614130;
   color: white;
 }
 
 body.dark .voiced-btns:hover {
   background-color: #a67c52;
+}
+
+
+/* ======== Ultra Small Devices (≤ 360px) ======== */
+@media (max-width: 360px) {
+  .ingredient-container {
+    width: 95%;
+    padding: 20px 12px;
+  }
+
+  .ingredient-title {
+    font-size: 22px;
+  }
+
+  .ingredient-input {
+    font-size: 14px;
+    padding: 10px 12px;
+  }
+
+  .ingredient-btn {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  .submit-btn,
+  .reset-btn,
+  .select-cuisine {
+    font-size: 15px;
+    padding: 12px 16px;
+  }
+
+  .voiced-btns {
+    font-size: 16px;
+    padding: 6px 8px;
+    right: 115px;
+  }
+}
+
+/* ======== Small Tablets (361px–600px) ======== */
+@media (min-width: 361px) and (max-width: 600px) {
+  .ingredient-container {
+    width: 90%;
+    padding: 28px 18px;
+  }
+
+  .ingredient-title {
+    font-size: 24px;
+  }
+
+  .ingredient-input {
+    font-size: 15px;
+    padding: 12px 14px;
+  }
+
+   .voiced-btns {
+    right: 90px;
+    font-size: 15px;
+    padding: 5px 9px;
+  }
+}
+
+/* ======== Medium Tablets (601px–768px) ======== */
+@media (min-width: 601px) and (max-width: 768px) {
+  .ingredient-container {
+    width: 85%;
+    padding: 32px;
+  }
+
+  .ingredient-title {
+    font-size: 26px;
+  }
+
+  .ingredient-input {
+    font-size: 16px;
+  }
+
+  .voiced-btns {
+    font-size: 20px;
+    padding: 7px 10px;
+  }
+}
+
+/* ======== Large Screens (≥ 1440px) ======== */
+@media (min-width: 1440px) {
+  .ingredient-container {
+    width: 50%;
+    max-width: 900px;
+    padding: 60px;
+  }
+
+  .ingredient-title {
+    font-size: 36px;
+  }
+
+  .ingredient-input {
+    font-size: 20px;
+    padding: 16px 20px;
+  }
+
+  .voiced-btns {
+    font-size: 24px;
+    padding: 8px 12px;
+    right: 150px;
+  }
+
+  .submit-btn,
+  .reset-btn,
+  .select-cuisine {
+    font-size: 20px;
+    padding: 18px 32px;
+  }
 }

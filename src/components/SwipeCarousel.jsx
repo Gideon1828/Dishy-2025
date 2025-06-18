@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import "./SwipeCarousel.css";
 
 const imgs = [
@@ -12,35 +12,62 @@ const imgs = [
 
 const SwipeCarousel = () => {
   const [imgIndex, setImgIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setImgIndex((prevIndex) => (prevIndex + 1) % imgs.length);
-    }, 3000); // Auto-slide every 3 seconds
-
+      setPrevIndex(imgIndex);
+      setImgIndex((prev) => (prev + 1) % imgs.length);
+    }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [imgIndex]);
 
   return (
-    <div className="carousel-container">
+    <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
+           className="carousel-container">
       <div className="phone-frame">
-        {imgs.map((src, idx) => (
+        <AnimatePresence mode="wait">
+          {prevIndex !== null && (
+            <motion.img
+              key={`prev-${prevIndex}`}
+              src={imgs[prevIndex]}
+              className="carousel-image"
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 0 }}
+              /* exit={{ opacity: 0 }} */
+              transition={{ duration: 1 }}
+              alt={`food-prev-${prevIndex + 1}`}
+            />
+          )}
           <motion.img
-            key={idx}
-            src={src}
+            key={`current-${imgIndex}`}
+            src={imgs[imgIndex]}
             className="carousel-image"
-            animate={{ opacity: imgIndex === idx ? 1 : 0, scale: imgIndex === idx ? 1 : 0.94 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            alt={`food-${idx + 1}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            alt={`food-${imgIndex + 1}`}
           />
-        ))}
+        </AnimatePresence>
+
         <div className="carousel-dots">
           {imgs.map((_, idx) => (
-            <span key={idx} className={`dot ${imgIndex === idx ? "active" : ""}`}></span>
+            <span
+              key={idx}
+              className={`dot ${imgIndex === idx ? "active" : ""}`}
+              onClick={() => {
+                setPrevIndex(imgIndex);
+                setImgIndex(idx);
+              }}
+            ></span>
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

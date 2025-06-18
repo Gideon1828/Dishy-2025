@@ -5,17 +5,16 @@ import Header from "../components/Header";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
+import Modal from "../context/Modal.jsx";
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Login State
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Forgot Password Flow
   const [forgotMode, setForgotMode] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
@@ -23,46 +22,99 @@ export default function LoginPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [modal, setModal] = useState({
+    message: "",
+    type: "alert",
+    variant: "success",
+  });
+
   const handleEmailChange = useCallback((e) => setEmail(e.target.value), []);
   const handlePasswordChange = useCallback((e) => setPassword(e.target.value), []);
 
   const handleSendOtp = async () => {
-    if (!email) return alert("Enter your email");
+    if (!email)
+      return setModal({
+        message: "Enter your email",
+        type: "prompt",
+        variant: "error",
+      });
+
     try {
       const res = await axios.post("https://dishy-2g4s.onrender.com/send-otp", { email });
-      alert(res.data.message);
+      setModal({
+        message: res.data.message,
+        type: "prompt",
+        variant: "success",
+      });
       setOtpSent(true);
     } catch (err) {
-      alert(err.response?.data?.error || "Failed to send OTP");
+      setModal({
+        message: err.response?.data?.error || "Failed to send OTP",
+        type: "prompt",
+        variant: "error",
+      });
     }
   };
 
   const handleVerifyOtp = async () => {
-    if (!otp) return alert("Enter the OTP");
+    if (!otp)
+      return setModal({
+        message: "Enter the OTP",
+        type: "prompt",
+        variant: "error",
+      });
+
     try {
       const res = await axios.post("https://dishy-2g4s.onrender.com/verify-otp", { email, otp });
-      alert(res.data.message);
+      setModal({
+        message: res.data.message,
+        type: "prompt",
+        variant: "success",
+      });
       setOtpVerified(true);
     } catch (err) {
-      alert(err.response?.data?.error || "OTP verification failed");
+      setModal({
+        message: err.response?.data?.error || "OTP verification failed",
+        type: "prompt",
+        variant: "error",
+      });
     }
   };
 
   const handleResetPassword = async () => {
-    if (!newPassword || !confirmPassword) return alert("Fill all password fields");
-    if (newPassword !== confirmPassword) return alert("Passwords do not match");
+    if (!newPassword || !confirmPassword)
+      return setModal({
+        message: "Fill all password fields",
+        type: "prompt",
+        variant: "error",
+      });
+
+    if (newPassword !== confirmPassword)
+      return setModal({
+        message: "Passwords do not match",
+        type: "prompt",
+        variant: "error",
+      });
 
     try {
       const res = await axios.post("https://dishy-2g4s.onrender.com/reset-password", {
         email,
         newPassword,
       });
-      alert(res.data.message);
+      setModal({
+        message: res.data.message,
+        type: "alert",
+        variant: "success",
+      });
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("token", res.data.token);
       navigate("/working");
     } catch (err) {
-      alert(err.response?.data?.error || "Password reset failed");
+      setModal({
+        message: err.response?.data?.error || "Password reset failed",
+        type: "prompt",
+        variant: "error",
+      });
     }
   };
 
@@ -73,12 +125,24 @@ export default function LoginPage() {
         email,
         password,
       });
-      alert(res.data.message);
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("token", res.data.token);
-      navigate("/working");
+
+      setModal({
+        message: res.data.message,
+        type: "alert",
+        variant: "success",
+      });
+
+      setTimeout(() => {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("token", res.data.token);
+        navigate("/working");
+      }, 2000);
     } catch (err) {
-      alert(err.response?.data?.error || t("login.loginFailed"));
+      setModal({
+        message: err.response?.data?.error || t("login.loginFailed"),
+        type: "alert",
+        variant: "error",
+      });
     }
     setLoading(false);
   };
@@ -97,6 +161,15 @@ export default function LoginPage() {
   return (
     <div>
       <Header />
+      {modal.message && (
+        <Modal
+          message={modal.message}
+          type={modal.type}
+          variant={modal.variant}
+          onClose={() => setModal({ ...modal, message: "" })}
+        />
+      )}
+
       <div className="login-container">
         <div className="login-image">
           <div className="overlay"></div>
@@ -201,16 +274,14 @@ export default function LoginPage() {
                 </>
               )}
 
-              {/* {!forgotMode && (
-                <p className="forgot-link" onClick={() => setForgotMode(true)} style={{ cursor: "pointer", marginTop: "10px", color: "#007bff" }}>
-                  Forgot password?
-                </p>
-              )} */}
-
               {!forgotMode && (
                 <div className="login-footer">
-                  <p className="forgot-link" onClick={() => setForgotMode(true)} style={{ cursor: "pointer", marginTop: "10px", color: "#007bff" }}>
-                  Forgot password?
+                  <p
+                    className="forgot-link"
+                    onClick={() => setForgotMode(true)}
+                    style={{ cursor: "pointer", marginTop: "10px", color: "#007bff" }}
+                  >
+                    Forgot password?
                   </p>
                   <p>
                     {t("login.noAccount")} <Link to="/register">{t("login.register")}</Link>

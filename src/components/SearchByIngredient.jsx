@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Mic } from "lucide-react";
+import Modal from "../context/Modal";
 import "./SearchByIngredient.css";
+import { motion } from "framer-motion";
 
 const API_KEY = "7eb495e634104e24aa445a2a2d7bf89c";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 const SearchByIngredient = () => {
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState(["", "", "", "", ""]);
   const [cuisine, setCuisine] = useState("");
-  const matchThreshold = 70; // Fixed at 70% (removed state)
+  const [modal, setModal] = useState({ message: "", type: "alert", variant: "success" });
+  const matchThreshold = 70;
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
 
@@ -20,18 +38,12 @@ const SearchByIngredient = () => {
         .get("https://dishy-2g4s.onrender.com/working", {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then((response) => {
-          setUsername(response.data.username);
-        })
-        .catch((error) => {
-          console.error("Error fetching data from MongoDB:", error);
-        });
+        .then((response) => setUsername(response.data.username))
+        .catch(console.error);
     }
   }, []);
 
-  const addIngredient = () => {
-    setIngredients([...ingredients, ""]);
-  };
+  const addIngredient = () => setIngredients([...ingredients, ""]);
 
   const removeIngredient = (index) => {
     const newIngredients = ingredients.filter((_, i) => i !== index);
@@ -40,14 +52,11 @@ const SearchByIngredient = () => {
 
   const handleIngredientChange = (index, value) => {
     const trimmedValue = value.trim().toLowerCase();
-    const isDuplicate = ingredients.some(
-      (ing, i) => i !== index && ing.trim().toLowerCase() === trimmedValue
-    );
+    const isDuplicate = ingredients.some((ing, i) => i !== index && ing.trim().toLowerCase() === trimmedValue);
     if (isDuplicate) {
-      alert("Duplicate ingredients are not allowed.");
+      setModal({ message: "Duplicate ingredients are not allowed.", type: "prompt", variant: "error" });
       return;
     }
-
     const updatedIngredients = [...ingredients];
     updatedIngredients[index] = value;
     setIngredients(updatedIngredients);
@@ -57,13 +66,13 @@ const SearchByIngredient = () => {
     const button = document.getElementById(`voiced-btns-${index}`);
     button.classList.add("clicked");
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Your browser does not support Speech Recognition.");
+      setModal({ message: "Your browser does not support Speech Recognition.", type: "prompt", variant: "error" });
       button.classList.remove("clicked");
       return;
     }
+
     const recognition = new SpeechRecognition();
     recognition.lang = "en-US";
     recognition.start();
@@ -73,197 +82,157 @@ const SearchByIngredient = () => {
       handleIngredientChange(index, transcript);
     };
 
-    recognition.onerror = (event) => {
-      console.error("Voice recognition error:", event.error);
-    };
+    recognition.onerror = (event) => console.error("Voice recognition error:", event.error);
 
-    recognition.onend = () => {
-      button.classList.remove("clicked");
-    };
+    recognition.onend = () => button.classList.remove("clicked");
   };
 
-  const normalizeIngredient = (ing) => {
-    return ing.trim().toLowerCase().replace(/s$/, "");
-  };
+  const normalizeIngredient = (ing) => ing.trim().toLowerCase().replace(/s$/, "");
 
   const calculateMatchScore = (recipe, userIngredientsSet) => {
-    const allRecipeIngredients = [
-      ...recipe.usedIngredients,
-      ...recipe.missedIngredients
-    ].map(ing => normalizeIngredient(ing.name));
+    const allRecipeIngredients = [...recipe.usedIngredients, ...recipe.missedIngredients]
+      .map((ing) => normalizeIngredient(ing.name));
 
-    const matchingIngredients = allRecipeIngredients.filter(ing => 
-      userIngredientsSet.has(ing)
-    ).length;
-
+    const matchingCount = allRecipeIngredients.filter((ing) => userIngredientsSet.has(ing)).length;
     return {
-      score: (matchingIngredients / allRecipeIngredients.length) * 100,
-      missingIngredients: allRecipeIngredients.filter(ing => 
-        !userIngredientsSet.has(ing)
-      ),
-      matchingCount: matchingIngredients
+      score: (matchingCount / allRecipeIngredients.length) * 100,
+      missingIngredients: allRecipeIngredients.filter((ing) => !userIngredientsSet.has(ing)),
+      matchingCount,
     };
   };
 
   const handleSearch = async () => {
     const nonEmptyIngredients = ingredients.filter((ing) => ing.trim() !== "");
 
-    if (!cuisine || cuisine === "" || cuisine === "Select Cuisine") {
-      alert("Please select a cuisine type.");
+    if (!cuisine || cuisine === "Select Cuisine") {
+      setModal({ message: "Please select a cuisine type.", type: "prompt", variant: "error" });
       return;
     }
 
-    if (nonEmptyIngredients.length < 1) { // Changed from 5 to 1 for flexibility
-      alert("Please enter at least 1 ingredient.");
+    if (nonEmptyIngredients.length < 1) {
+      setModal({ message: "Please enter at least 1 ingredient.", type: "prompt", variant: "error" });
       return;
     }
 
     setLoading(true);
     const ingredientQuery = nonEmptyIngredients.join(",");
-    
-    // Try both ranking methods and combine results
     const urls = [
       `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientQuery}&number=15&ranking=1&ignorePantry=true&apiKey=${API_KEY}`,
-      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientQuery}&number=15&ranking=2&ignorePantry=true&apiKey=${API_KEY}`
+      `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${ingredientQuery}&number=15&ranking=2&ignorePantry=true&apiKey=${API_KEY}`,
     ];
 
     try {
-      const responses = await Promise.all(urls.map(url => fetch(url)));
-      const data = await Promise.all(responses.map(res => res.json()));
-      
-      // Combine and deduplicate recipes
+      const responses = await Promise.all(urls.map((url) => fetch(url)));
+      const data = await Promise.all(responses.map((res) => res.json()));
       const allRecipes = [...data[0], ...data[1]].reduce((acc, current) => {
-        const x = acc.find(item => item.id === current.id);
-        if (!x) return acc.concat([current]);
+        if (!acc.find((item) => item.id === current.id)) acc.push(current);
         return acc;
       }, []);
 
-      const userIngredientsSet = new Set(
-        nonEmptyIngredients.map(normalizeIngredient)
-      );
-
-      // Calculate match score for each recipe
-      const scoredRecipes = allRecipes.map(recipe => {
+      const userIngredientsSet = new Set(nonEmptyIngredients.map(normalizeIngredient));
+      const scoredRecipes = allRecipes.map((recipe) => {
         const matchData = calculateMatchScore(recipe, userIngredientsSet);
-        return {
-          ...recipe,
-          matchPercentage: matchData.score,
-          missingIngredients: matchData.missingIngredients,
-          matchingCount: matchData.matchingCount
-        };
+        return { ...recipe, matchPercentage: matchData.score, missingIngredients: matchData.missingIngredients, matchingCount: matchData.matchingCount };
       });
 
-      // Filter by threshold and cuisine
-      const filteredRecipes = scoredRecipes.filter(recipe => {
+      const filteredRecipes = scoredRecipes.filter((recipe) => {
         const meetsThreshold = recipe.matchPercentage >= matchThreshold;
-        const cuisineMatch = cuisine === "Any" || 
-                           (recipe.cuisines && recipe.cuisines.includes(cuisine));
+        const cuisineMatch = cuisine === "Any" || (recipe.cuisines && recipe.cuisines.includes(cuisine));
         return meetsThreshold && cuisineMatch;
-      });
-
-      // Sort by best match (highest percentage first)
-      filteredRecipes.sort((a, b) => b.matchPercentage - a.matchPercentage);
+      }).sort((a, b) => b.matchPercentage - a.matchPercentage);
 
       if (filteredRecipes.length > 0) {
-        navigate("/results", { 
-          state: { 
+        navigate("/results", {
+          state: {
             recipes: filteredRecipes,
-            userIngredients: nonEmptyIngredients 
-          } 
+            userIngredients: nonEmptyIngredients,
+          },
         });
       } else {
-        // Show closest matches if no exact matches
         const closestMatches = scoredRecipes
-          .filter(recipe => cuisine === "Any" || 
-                          (recipe.cuisines && recipe.cuisines.includes(cuisine)))
+          .filter((r) => cuisine === "Any" || (r.cuisines && r.cuisines.includes(cuisine)))
           .sort((a, b) => b.matchPercentage - a.matchPercentage)
           .slice(0, 5);
 
         if (closestMatches.length > 0) {
-          const proceed = window.confirm(
-            `No recipes match ${matchThreshold}% of your ingredients. ` +
-            `Would you like to see the closest matches (${Math.round(closestMatches[0].matchPercentage)}% match)?`
-          );
-          if (proceed) {
-            navigate("/results", { 
-              state: { 
-                recipes: closestMatches,
-                userIngredients: nonEmptyIngredients 
-              } 
-            });
-          }
+          setModal({
+            message: `closest match Found is ${Math.round(closestMatches[0].matchPercentage)}% 
+             For${matchThreshold}% Threshold. Would you like to see these recipes?`,
+            type: "prompt",
+            variant: "success",
+            onConfirm: () =>
+              navigate("/results", {
+                state: { recipes: closestMatches, userIngredients: nonEmptyIngredients },
+              }),
+          });
         } else {
-          alert("No recipes found matching your criteria. Try different ingredients.");
+          setModal({ message: "No recipes found. Try different ingredients.", type: "prompt", variant: "error" });
         }
       }
     } catch (error) {
       console.error("Error fetching recipes:", error);
-      alert("Something went wrong. Please try again.");
+      setModal({ message: "Something went wrong. Please try again.", type: "prompt", variant: "error" });
     } finally {
       setLoading(false);
     }
   };
 
-  const resetIngredients = () => {
-    setIngredients(["", "", "", "", ""]);
-  };
+  const resetIngredients = () => setIngredients(["", "", "", "", ""]);
+  const placeholderExamples = ["Eg. Chicken", "Eg. Tomato", "Eg. Onion", "Eg. Garlic", "Eg. Rice"];
 
-
-  const placeholderExamples = [
-  "Eg. Chicken",
-  "Eg. Tomato",
-  "Eg. Onion",
-  "Eg. Garlic",
-  "Eg. Rice"
-];
   return (
-    <div className="ingredient-container">
-      <h2>Welcome {username || "Guest"}</h2>
-      <h2 className="ingredient-title">Add Ingredients to Find New Recipes</h2>
+    <motion.div
+      className="ingredient-container"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={containerVariants}
+    >
+      {modal.message && (
+        <Modal
+          message={modal.message}
+          type={modal.type}
+          variant={modal.variant}
+          onClose={() => setModal({ ...modal, message: "" })}
+          onConfirm={modal.onConfirm}
+        />
+      )}
 
-      {/* Removed the threshold slider control */}
+      <motion.h2 variants={itemVariants}>Welcome {username || "Guest"}</motion.h2>
+      <motion.h2 className="ingredient-title" variants={itemVariants}>Add Ingredients to Find New Recipes</motion.h2>
 
-      <div className="ingredient-form">
+      <motion.div className="ingredient-form" variants={itemVariants}>
         {ingredients.map((ingredient, index) => (
           <div key={index} className="ingredient-input-group">
-            <input
-              type="text"
-              placeholder={placeholderExamples[index] }
-              value={ingredient}
-              onChange={(e) => handleIngredientChange(index, e.target.value)}
-              className="ingredient-input"
-            />
-            <button
-              id={`voiced-btns-${index}`}
-              className="voiced-btns"
-              onClick={() => handleVoiceSearch(index)}
-            >
-              🎤
-            </button>
-            <button className="ingredient-btn add" onClick={addIngredient}>
-              +
-            </button>
-            {index > 0 && (
+            <div style={{ position: "relative", width: "100%" }}>
+              <input
+                type="text"
+                placeholder={placeholderExamples[index]}
+                value={ingredient}
+                onChange={(e) => handleIngredientChange(index, e.target.value)}
+                className="ingredient-input"
+                style={{ paddingRight: "44px" }}
+              />
               <button
-                className="ingredient-btn remove"
-                onClick={() => removeIngredient(index)}
+                id={`voiced-btns-${index}`}
+                className="voiced-btns"
+                onClick={() => handleVoiceSearch(index)}
+                aria-label="Voice Input"
               >
-                -
+                <Mic size={18} />
               </button>
+            </div>
+            <button className="ingredient-btn add" onClick={addIngredient}>+</button>
+            {index >= 0 && (
+              <button className="ingredient-btn remove" onClick={() => removeIngredient(index)}>-</button>
             )}
           </div>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="cuisine-controls">
-        <button className="reset-btn" onClick={resetIngredients}>
-          Reset
-        </button>
-        <select
-          className="select-cuisine"
-          onChange={(e) => setCuisine(e.target.value)}
-          value={cuisine}
-        >
+      <motion.div className="cuisine-controls" variants={itemVariants}>
+        <button className="reset-btn" onClick={resetIngredients}>Reset</button>
+        <select className="select-cuisine" onChange={(e) => setCuisine(e.target.value)} value={cuisine}>
           <option value="">Select Cuisine</option>
           <option value="Any">Any</option>
           <option value="Indian">Indian</option>
@@ -278,12 +247,19 @@ const SearchByIngredient = () => {
           <option value="Korean">Korean</option>
           <option value="Burmese">Burmese</option>
         </select>
-      </div>
+      </motion.div>
 
-      <button className="submit-btn" onClick={handleSearch} disabled={loading}>
+      <motion.button
+        className="submit-btn"
+        onClick={handleSearch}
+        disabled={loading}
+        variants={itemVariants}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
         {loading ? "Loading..." : "Find Recipes"}
-      </button>
-    </div>
+      </motion.button>
+    </motion.div>
   );
 };
 

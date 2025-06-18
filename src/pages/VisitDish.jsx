@@ -7,6 +7,7 @@ import Footer from "../components/Footer.jsx";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import IngredientList from "../components/IngredientList.jsx";
+import Modal from "../context/Modal.jsx";
 
 const VisitDish = () => {
   const { id } = useParams();
@@ -25,6 +26,12 @@ const VisitDish = () => {
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedText, setEditedText] = useState("");
   const commentsPerPage = 5;
+
+const [modal, setModal] = useState({
+    message: "",
+    type: "alert",
+    variant: "success",
+  });
 
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
@@ -152,7 +159,11 @@ const handleDeleteComment = async (commentId) => {
       },
     });
     if (!res.ok) throw new Error("Failed to delete comment");
-    toast.success("Comment deleted");
+    setModal({
+        message: "Comment deleted successfully!",
+        type: "alert",
+        variant: "success",
+      });
     // Refresh comments
     const updatedRes = await fetch(`https://dishy-2g4s.onrender.com/rate-comment/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -161,15 +172,28 @@ const handleDeleteComment = async (commentId) => {
     setRatings(updatedData.allRatings);
     setComments(updatedData.allRatings.filter(item => item.comment));
   } catch (err) {
-    toast.error("Deletion failed");
+    setModal({
+        message: "Failed to delete comment",
+        type: "alert",
+        variant: "error",
+      });
     console.error(err);
   }
 };
 
   const handleSubmitComment = async () => {
-    if (!newComment.trim()) return toast.error("Comment cannot be empty");
+    if (!newComment.trim()) 
+      return setModal({
+        message: "Comment cannot be empty",
+        type: "alert",
+        variant: "error",
+      });
     const token = localStorage.getItem("token");
-    if (!token) return toast.error("Login required");
+    if (!token) return  setModal({
+        message: "Login to post a Comment",
+        type: "alert",
+        variant: "error",
+      });
     try {
       const res = await fetch(`https://dishy-2g4s.onrender.com/rate-comment`, {
         method: "POST",
@@ -180,7 +204,11 @@ const handleDeleteComment = async (commentId) => {
         body: JSON.stringify({ dishId: id, comment: newComment }),
       });
       if (!res.ok) throw new Error("Comment failed");
-      toast.success("Comment added");
+      setModal({
+        message: "Comment posted successfully!",
+        type: "alert",
+        variant: "success",
+      });
       setNewComment("");
       const updatedRes = await fetch(`https://dishy-2g4s.onrender.com/rate-comment/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -189,7 +217,11 @@ const handleDeleteComment = async (commentId) => {
       setRatings(updatedData.allRatings);
       setComments(updatedData.allRatings.filter(item => item.comment));
     } catch (err) {
-      toast.error("Failed to post comment");
+      setModal({
+        message: "Failed to post comment",
+        type: "alert",
+        variant: "error",
+      });
     }
   };
 
@@ -247,6 +279,14 @@ const averageRating = ratedUsers.length
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <ToastContainer position="bottom-right" autoClose={3000} />
+      {modal.message && (
+              <Modal
+                message={modal.message}
+                type={modal.type}
+                variant={modal.variant}
+                onClose={() => setModal({ ...modal, message: "" })}
+              />
+            )}
       <Header />
       <div className="dish-container">
         <div className="dish-header">
