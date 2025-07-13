@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home1 from "./pages/Home1.jsx";
-import Login from "../../server/auth/Login.jsx";
-import Register from "../../server/auth/Register.jsx";
+import Login from "./auth/Login.jsx";
+import Register from "./auth/Register.jsx";
 import Working from "./pages/Working.jsx";
 import ResultsPage from "./pages/ResultsPage.jsx";
 import VisitDish from "./pages/VisitDish.jsx";
