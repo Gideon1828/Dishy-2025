@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
-import Header from "../../client/src/components/Header.jsx";
+import Header from "../components/Header.jsx";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
@@ -37,9 +37,12 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const response = await axios.post("https://dishy-2g4s.onrender.com/send-otp", {
-        email: formData.email,
-      });
+      const response = await axios.post(
+        "https://dishy-2g4s.onrender.com/send-otp",
+        {
+          email: formData.email,
+        }
+      );
       alert(response.data.message);
       setOtpSent(true);
     } catch (error) {
@@ -53,10 +56,13 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const response = await axios.post("https://dishy-2g4s.onrender.com/verify-otp", {
-        email: formData.email,
-        otp,
-      });
+      const response = await axios.post(
+        "https://dishy-2g4s.onrender.com/verify-otp",
+        {
+          email: formData.email,
+          otp,
+        }
+      );
       alert(response.data.message);
       setEmailVerified(true);
     } catch (error) {
@@ -71,7 +77,10 @@ export default function RegisterPage() {
       return;
     }
     try {
-      const response = await axios.post("https://dishy-2g4s.onrender.com/register", formData);
+      const response = await axios.post(
+        "https://dishy-2g4s.onrender.com/register",
+        formData
+      );
       alert(response.data.message);
       navigate("/login");
     } catch (error) {
@@ -142,7 +151,11 @@ export default function RegisterPage() {
                   disabled={otpSent}
                 />
                 {!otpSent ? (
-                  <button type="button" onClick={handleSendOtp} className="otp-button">
+                  <button
+                    type="button"
+                    onClick={handleSendOtp}
+                    className="otp-button"
+                  >
                     Send OTP
                   </button>
                 ) : (
@@ -155,7 +168,11 @@ export default function RegisterPage() {
                       required
                       className="otp-input"
                     />
-                    <button type="button" onClick={handleVerifyOtp} className="otp-button">
+                    <button
+                      type="button"
+                      onClick={handleVerifyOtp}
+                      className="otp-button"
+                    >
                       Verify OTP
                     </button>
                   </>
@@ -180,7 +197,8 @@ export default function RegisterPage() {
 
               <div className="register-footer">
                 <p>
-                  {t("register.alreadyHaveAccount")} <Link to="/login">{t("register.login")}</Link>
+                  {t("register.alreadyHaveAccount")}{" "}
+                  <Link to="/login">{t("register.login")}</Link>
                 </p>
                 <Link to="/" className="back-home">
                   {t("register.backHome")}

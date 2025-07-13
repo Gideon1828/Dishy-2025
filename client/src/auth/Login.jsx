@@ -1,11 +1,11 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
-import Header from "../../client/src/components/Header.jsx";
+import Header from "../components/Header.jsx";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
-import Modal from "../../client/src/context/Modal.jsx";
+import Modal from "../context/Modal.jsx";
 
 export default function LoginPage() {
   const { t } = useTranslation();
