@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from 'framer-motion'; // Ensure proper routing
 
 const Hero = () => {
+  const MotionLink = motion(Link);
   return (
     <motion.div
       className={styles.heroContainer}
@@ -43,11 +44,11 @@ const Hero = () => {
           <li>4. Ran Out of Ideas for What to Cook</li>
         </ul>
         
-          <motion.Link to="/login" className={styles.createRecipeBtn}
+          <MotionLink to="/login" className={styles.createRecipeBtn}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.3, duration: 0.6 }}
-          >Create Recipe</motion.Link>
+          >Create Recipe</MotionLink>
         
       </motion.div>
     </motion.div>

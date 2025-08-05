@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import IngredientList from "../components/IngredientList.jsx";
 import Modal from "../context/Modal.jsx";
+import YouTubeEmbed from "../components/YouTubeEmbed.jsx";
 
 const VisitDish = () => {
   const { id } = useParams();
@@ -369,6 +370,11 @@ const VisitDish = () => {
           >
             Generate Ingredients Price List
           </button>
+        </div>
+        
+        <div className="section">
+          <h2 className="section-title">How to Cook {dish.title}</h2>
+          <YouTubeEmbed dishTitle={dish.title} />
         </div>
 
         <div className="section">
