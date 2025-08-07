@@ -1,3 +1,3 @@
-1.Google based login
+
 2.login OTP UI change
 3.change Token from localstorage to session

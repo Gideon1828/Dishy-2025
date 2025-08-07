@@ -6,6 +6,10 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const session = require("express-session");
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const GitHubStrategy = require("passport-github2").Strategy;
 
 // App Config
 dotenv.config();
@@ -13,6 +17,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware to verify JWT token
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(session({ secret: "keyboard cat", resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 // In same file or extract later
 const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -28,31 +38,33 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Connection Error:", err));
 
-// Schemas
+// User schema
 const userSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
   username: String,
   email: { type: String, unique: true },
   password: String,
+  googleId: String,
+  githubId: String,
   favorites: [
     {
       id: String,
       title: String,
       image: String,
-      ingredients: [String]
-    }
-  ]
+      ingredients: [String],
+    },
+  ],
 });
+
+
 
 const otpSchema = new mongoose.Schema({
   email: String,
@@ -96,6 +108,70 @@ const transporter = nodemailer.createTransport({
 // Default Route
 app.get("/", (req, res) => res.send("Backend is running!"));
 
+// Passport setup
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => User.findById(id).then(user => done(null, user)));
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "https://dishy-2g4s.onrender.com/auth/google/callback",
+}, async (accessToken, refreshToken, profile, done) => {
+  let user = await User.findOne({ googleId: profile.id });
+  if (!user) {
+    user = await User.create({
+      firstname: profile.name.givenName,
+      lastname: profile.name.familyName,
+      username: profile.displayName,
+      email: profile.emails[0].value,
+      googleId: profile.id
+    });
+  }
+  return done(null, user);
+}));
+
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: "https://dishy-2g4s.onrender.com/auth/github/callback",
+}, async (accessToken, refreshToken, profile, done) => {
+  let user = await User.findOne({ githubId: profile.id });
+  if (!user) {
+    user = await User.create({
+      username: profile.username,
+      email: profile.emails?.[0]?.value || null,
+      githubId: profile.id
+    });
+  }
+  return done(null, user);
+}));
+
+// OAuth Routes
+app.get('/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email']  // MUST include 'email'
+  })
+);
+
+app.get("/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    const token = jwt.sign({ id: req.user._id }, "secretKey", { expiresIn: "1h" });
+    res.redirect(`https://dishy2025.vercel.app/oauth-success?token=${token}`);
+  }
+);
+
+app.get("/auth/github", passport.authenticate("github", { scope: ["user:email"] }));
+
+app.get("/auth/github/callback", passport.authenticate("github", { failureRedirect: "/" }), (req, res) => {
+  const token = jwt.sign({ id: req.user._id }, "secretKey", { expiresIn: "1h" });
+  res.redirect(`https://dishy2025.vercel.app/oauth-success?token=${token}`); // you can change this URL
+});
+
+// Example success endpoint
+app.get("/success", (req, res) => {
+  res.send("OAuth login success! Token in query param.");
+});
 // AUTH ROUTES
 app.post("/register", async (req, res) => {
   const { firstname, lastname, username, email, password } = req.body;

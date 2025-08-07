@@ -7,7 +7,9 @@ import Working from "./pages/Working.jsx";
 import ResultsPage from "./pages/ResultsPage.jsx";
 import VisitDish from "./pages/VisitDish.jsx";
 import Favorites from "./pages/Favorites.jsx";
-import LanguageSwitcher from "./LanguageSwitcher.jsx"; // Import the LanguageSwitcher
+import LanguageSwitcher from "./LanguageSwitcher.jsx"; 
+import OAuthSuccess from "./auth/OAuthSuccess.jsx";
+// Import the LanguageSwitcher
 //Only Header ,Footer,Login and Register components can be translated to Tamil
 //Other Components are Not yet Translated
 export default function App() {
@@ -33,6 +35,8 @@ export default function App() {
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/visit-dish/:id" element={<VisitDish />} />
         <Route path="/favorite" element={<Favorites />} />
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
+
       </Routes>
     </div>
   );

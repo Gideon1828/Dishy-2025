@@ -174,4 +174,58 @@
     font-size: 0.85rem;
   }
 }
+.oauth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
 
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  color: white;
+}
+
+.google-btn {
+  background-color: #db4437;
+}
+
+.github-btn {
+  background-color: #333;
+}
+
+.oauth-icon {
+  height: 20px;
+  margin-right: 10px;
+}
+.oauth-icon img {
+  height: 100%;
+  width: auto;
+}
+.oauth-icon svg {
+  height: 100%;
+  width: auto;
+  fill: white;
+}
+.oauth-btn:hover {
+  opacity: 0.9;
+}
+.oauth-btn:active {
+  transform: scale(0.98);
+}
+.oauth-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+.oauth-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed; 
+  opacity: 0.7;  
+  pointer-events: none;
+}
