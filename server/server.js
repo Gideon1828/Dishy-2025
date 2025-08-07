@@ -117,16 +117,26 @@ passport.use(new GoogleStrategy({
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
   callbackURL: "https://dishy-2g4s.onrender.com/auth/google/callback",
 }, async (accessToken, refreshToken, profile, done) => {
-  let user = await User.findOne({ googleId: profile.id });
-  if (!user) {
-    user = await User.create({
-      firstname: profile.name.givenName,
-      lastname: profile.name.familyName,
-      username: profile.displayName,
-      email: profile.emails[0].value,
-      googleId: profile.id
-    });
-  }
+  let user = await User.findOne({
+  $or: [
+    { googleId: profile.id },
+    { email: profile.emails[0].value }
+  ]
+});
+
+if (!user) {
+  user = await User.create({
+    firstname: profile.name?.givenName || "",
+    lastname: profile.name?.familyName || "",
+    username: profile.displayName || profile.emails[0].value,
+    email: profile.emails[0].value,
+    googleId: profile.id
+  });
+} else if (!user.googleId) {
+  // Link Google ID to existing user
+  user.googleId = profile.id;
+  await user.save();
+}
   return done(null, user);
 }));
 
