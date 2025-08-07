@@ -47,8 +47,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 // User schema
 const userSchema = new mongoose.Schema({
-  firstname: String,
-  lastname: String,
   username: String,
   email: { type: String, unique: true },
   password: String,
@@ -126,8 +124,6 @@ passport.use(new GoogleStrategy({
 
 if (!user) {
   user = await User.create({
-    firstname: profile.name?.givenName || "",
-    lastname: profile.name?.familyName || "",
     username: profile.displayName || profile.emails[0].value,
     email: profile.emails[0].value,
     googleId: profile.id
@@ -184,9 +180,9 @@ app.get("/success", (req, res) => {
 });
 // AUTH ROUTES
 app.post("/register", async (req, res) => {
-  const { firstname, lastname, username, email, password } = req.body;
+  const {username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 6);
-  const newUser = new User({ firstname, lastname, username, email, password: hashedPassword });
+  const newUser = new User({username, email, password: hashedPassword });
   try {
     await newUser.save();
     res.status(201).json({ message: "User registered successfully" });

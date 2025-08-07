@@ -8,18 +8,15 @@ import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
   const { t } = useTranslation();
+  const [step, setStep] = useState("form"); // 'form' or 'otp'
+
   const [formData, setFormData] = useState({
-    firstname: "",
-    lastname: "",
     username: "",
     email: "",
     password: "",
   });
 
-  const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
-  const [emailVerified, setEmailVerified] = useState(false);
-
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,59 +29,44 @@ export default function RegisterPage() {
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    if (!formData.email) {
-      alert("Please enter your email first.");
-      return;
-    }
+    
     try {
-      const response = await axios.post(
-        "https://dishy-2g4s.onrender.com/send-otp",
-        {
-          email: formData.email,
-        }
-      );
-      alert(response.data.message);
-      setOtpSent(true);
-    } catch (error) {
-      alert(error.response?.data?.error || "Failed to send OTP");
-    }
+      const response = await axios.post("https://dishy-2g4s.onrender.com/send-otp", {
+        email: formData.email,
+      });
+      console.log("OTP Send Response:", response.data);
+
+    alert(response.data.message); // e.g. "OTP sent to your email"
+    setStep("otp"); // Switch to OTP input screen
+  } catch (error) {
+  console.error("Error sending OTP:", error); // Log entire error
+  console.error("Full response:", error.response); // See if server responded
+  alert(error.response?.data?.error || "Failed to send OTP");
+}
   };
 
-  const handleVerifyOtp = async () => {
+  const handleVerifyOtpAndRegister = async (e) => {
+    e.preventDefault();
     if (!otp) {
       alert("Please enter the OTP.");
       return;
     }
-    try {
-      const response = await axios.post(
-        "https://dishy-2g4s.onrender.com/verify-otp",
-        {
-          email: formData.email,
-          otp,
-        }
-      );
-      alert(response.data.message);
-      setEmailVerified(true);
-    } catch (error) {
-      alert(error.response?.data?.error || "OTP verification failed");
-    }
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!emailVerified) {
-      alert("Please verify your email using the OTP first.");
-      return;
-    }
     try {
-      const response = await axios.post(
-        "https://dishy-2g4s.onrender.com/register",
-        formData
-      );
-      alert(response.data.message);
+      const verifyResponse = await axios.post("https://dishy-2g4s.onrender.com/verify-otp", {
+        email: formData.email,
+        otp,
+      });
+
+      alert(verifyResponse.data.message); // OTP verified
+
+      // Proceed with registration
+      const registerResponse = await axios.post("https://dishy-2g4s.onrender.com/register", formData);
+      alert(registerResponse.data.message); // Registration successful
+
       navigate("/login");
     } catch (error) {
-      alert(error.response?.data?.error || t("register.registrationFailed"));
+      alert(error.response?.data?.error || "OTP verification or registration failed");
     }
   };
 
@@ -101,110 +83,74 @@ export default function RegisterPage() {
             <h1 className="register-title">{t("register.title")}</h1>
             <p className="register-subtitle">{t("register.subtitle")}</p>
 
-            <form onSubmit={handleSubmit} className="register-form">
-              <div className="input-group-row">
+            {step === "form" ? (
+              <form onSubmit={handleSendOtp} className="register-form">
                 <div className="input-group">
-                  <label htmlFor="firstname">{t("register.firstName")}</label>
+                  <label htmlFor="username">{t("register.username")}</label>
                   <input
-                    id="firstname"
-                    name="firstname"
+                    id="username"
+                    name="username"
                     type="text"
-                    value={formData.firstname}
+                    value={formData.username}
                     onChange={handleChange}
                     required
                   />
                 </div>
+
                 <div className="input-group">
-                  <label htmlFor="lastname">{t("register.lastName")}</label>
+                  <label htmlFor="email">{t("register.email")}</label>
                   <input
-                    id="lastname"
-                    name="lastname"
-                    type="text"
-                    value={formData.lastname}
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
                     onChange={handleChange}
                     required
                   />
                 </div>
-              </div>
 
-              <div className="input-group">
-                <label htmlFor="username">{t("register.username")}</label>
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  value={formData.username}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                <div className="input-group">
+                  <label htmlFor="password">{t("register.password")}</label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
 
-              <div className="input-group">
-                <label htmlFor="email">{t("register.email")}</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  disabled={otpSent}
-                />
-                {!otpSent ? (
-                  <button
-                    type="button"
-                    onClick={handleSendOtp}
-                    className="otp-button"
-                  >
-                    Send OTP
-                  </button>
-                ) : (
-                  <>
-                    <input
-                      type="text"
-                      placeholder="Enter OTP"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      required
-                      className="otp-input"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleVerifyOtp}
-                      className="otp-button"
-                    >
-                      Verify OTP
-                    </button>
-                  </>
-                )}
-              </div>
+                <button type="submit" className="register-button">
+                  Continue
+                </button>
 
-              <div className="input-group">
-                <label htmlFor="password">{t("register.password")}</label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-
-              <button type="submit" className="register-button">
-                {t("register.registerButton")}
-              </button>
-
-              <div className="register-footer">
-                <p>
-                  {t("register.alreadyHaveAccount")}{" "}
-                  <Link to="/login">{t("register.login")}</Link>
-                </p>
-                <Link to="/" className="back-home">
-                  {t("register.backHome")}
-                </Link>
-              </div>
-            </form>
+                <div className="register-footer">
+                  <p>
+                    {t("register.alreadyHaveAccount")} <Link to="/login">{t("register.login")}</Link>
+                  </p>
+                  <Link to="/" className="back-home">
+                    {t("register.backHome")}
+                  </Link>
+                </div>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtpAndRegister} className="register-form">
+                <div className="input-group">
+                  <label>Enter OTP sent to your email</label>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter OTP"
+                    required
+                  />
+                </div>
+                <button type="submit" className="register-button">
+                  Verify OTP & Register
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </div>

@@ -168,6 +168,12 @@
     padding: 10px;
   }
 
+
+.login-icons img {
+  width: 30px;
+  cursor: pointer;
+}
+
   .login-footer p,
   .login-footer a,
   .back-home {
@@ -176,8 +182,9 @@
 }
 .oauth-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
   margin-top: 15px;
 }
 
@@ -192,16 +199,16 @@
   color: white;
 }
 
-.google-btn {
+/* .google-btn {
   background-color: #db4437;
 }
 
 .github-btn {
   background-color: #333;
-}
+} */
 
 .oauth-icon {
-  height: 20px;
+  height: 50px;
   margin-right: 10px;
 }
 .oauth-icon img {

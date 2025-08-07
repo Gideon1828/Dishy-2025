@@ -209,29 +209,38 @@ export default function LoginPage() {
                   <button type="submit" className="login-button" disabled={loading}>
                     {loading ? t("login.loggingIn") : t("login.title")}
                   </button>
+                  <p style={{ textAlign: "center", margin: "10px 0", fontWeight: "bold" }}>OR</p>
                   <div className="oauth-buttons">
-  <p style={{ textAlign: "center", margin: "10px 0", fontWeight: "bold" }}>OR</p>
-  <a
-  href="https://dishy-2g4s.onrender.com/auth/google"
-  className="oauth-btn google-btn"
->
-  <img
-    src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-    alt="Google"
-    className="oauth-icon"
-  />
-  Sign in with Google
-</a>
+                  
+                  <a
+                  href="https://dishy-2g4s.onrender.com/auth/google"
+                  className="oauth-btn google-btn"
+                    >
+                    <img
+                  src="/google.png"
+                  alt="Google"
+                   className="oauth-icon"
+                  />
+                  
+                </a>
 
-<a
-  href="https://dishy-2g4s.onrender.com/auth/github"
-  className="oauth-btn github-btn"
->
-  <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" className="oauth-icon" />
-  Sign in with GitHub
-</a>
-
-</div>
+                <a
+                  href="https://dishy-2g4s.onrender.com/auth/github"
+                  className="oauth-btn github-btn"
+                >
+                  <img
+                    src="/github.png"
+                    alt="GitHub"
+                    className="oauth-icon"
+                  />
+                  
+                </a>
+              </div>
+              {/*<p className="login-or">or Login with</p>
+              <div className="login-icons">
+              <img src="/google.png" alt="Google" />
+              <img src="/github.png" alt="Github" />
+              </div>*/}
 
                 </>
               ) : (
